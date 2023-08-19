@@ -1,98 +1,20 @@
 import SwiftUI
 import CoreData
+import AppKit
 
 struct ContentView: View {
 	@Environment(\.managedObjectContext) private var viewContext
 	
-	@FetchRequest(
-		sortDescriptors: [NSSortDescriptor(keyPath: \Project.timestamp, ascending: true)],
-		animation: .default)
-	private var projects: FetchedResults<Project>
-	
-	@State private var isProjectViewPresented = false
-	
 	var body: some View {
 		NavigationView {
-			ScrollView {
-				LazyVGrid(columns: [
-					GridItem(.flexible()),
-					GridItem(.flexible())
-				], spacing: 20) {
-					ForEach(projects) { project in
-						RoundedRectangle(cornerRadius: 10)
-							.frame(width: 250, height: 250)
-							.foregroundColor(Color(.darkGray))
-							.overlay(
-								Text(project.title ?? "")
-									.font(.headline)
-									.foregroundColor(.white)
-							)
-					}
-				}
-				.padding()
-			}
-			.navigationTitle("Projects")
-			.toolbar {
-				ToolbarItem {
-					Button(action: {
-						isProjectViewPresented.toggle()
-					}) {
-						Label("Create Project", systemImage: "plus")
-					}
-				}
-			}
-			.sheet(isPresented: $isProjectViewPresented, content: {
-				ProjectView(onSave: { title in
-					addProject(title: title)
-				})
-			})
-		}
-	}
-	
-	private func addProject(title: String) {
-		withAnimation {
-			let newProject = Project(context: viewContext)
-			newProject.timestamp = Date()
-			newProject.title = title
-			
-			do {
-				try viewContext.save()
-			} catch {
-				let nsError = error as NSError
-				fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-			}
+			ProjectGridView()
 		}
 	}
 }
 
-struct VisualEffectView: View {
-	var effect: NSVisualEffectView.Material
-	
-	var body: some View {
-		VisualEffectViewRepresentable(effect: effect)
-			.frame(width: 100, height: 100)
-			.cornerRadius(10)
-			.overlay(
-				Text("Add")
-					.font(.headline)
-					.foregroundColor(Color(.lightGray))
-			)
-	}
-}
-
-struct VisualEffectViewRepresentable: NSViewRepresentable {
-	typealias NSViewType = NSVisualEffectView
-	
-	var effect: NSVisualEffectView.Material
-	
-	func makeNSView(context: Context) -> NSVisualEffectView {
-		let view = NSVisualEffectView()
-		view.material = effect
-		return view
-	}
-	
-	func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-		nsView.material = effect
+struct ContentView_Previews: PreviewProvider {
+	static var previews: some View {
+		ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 	}
 }
 
@@ -108,19 +30,41 @@ struct ProjectGridView: View {
 	
 	var body: some View {
 		ScrollView {
-			LazyVGrid(columns: [
-				GridItem(.flexible()),
-				GridItem(.flexible())
-			], spacing: 20) {
+			LazyHGrid(rows: [GridItem(.adaptive(minimum: 250), spacing: 20)], spacing: 20) {
 				ForEach(projects) { project in
-					RoundedRectangle(cornerRadius: 10)
-						.frame(width: 250, height: 250)
-						.foregroundColor(Color(.darkGray))
-						.overlay(
-							Text(project.title ?? "")
-								.font(.headline)
+					ZStack(alignment: .topTrailing) {
+						RoundedRectangle(cornerRadius: 10)
+							.frame(width: 250, height: 250)
+							.foregroundColor(Color(.darkGray))
+							.overlay(
+								VStack {
+									Text(project.title ?? "")
+										.font(.headline)
+										.foregroundColor(.white)
+								}
+							)
+						
+						Button(action: {
+							showDeleteConfirmation(for: project)
+						}) {
+							Image(systemName: "xmark.circle.fill")
+								.resizable()
+								.frame(width: 24, height: 24)
 								.foregroundColor(.white)
-						)
+						}
+						.padding(8)
+						.buttonStyle(BorderlessButtonStyle())
+						.onHover { isHovered in
+							// Adjust the appearance when hovering
+							// (Optional: Change the icon's color or size)
+						}
+					}
+					.gesture(
+						LongPressGesture(minimumDuration: 1.0)
+							.onEnded { _ in
+								showDeleteConfirmation(for: project)
+							}
+					)
 				}
 			}
 			.padding()
@@ -140,11 +84,39 @@ struct ProjectGridView: View {
 		})
 	}
 	
+	private func showDeleteConfirmation(for project: Project) {
+		let alert = NSAlert()
+		alert.messageText = "Delete Project"
+		alert.informativeText = "Are you sure you want to delete this project?"
+		alert.addButton(withTitle: "Cancel")
+		alert.addButton(withTitle: "Delete")
+		
+		let response = alert.runModal()
+		if response == .alertSecondButtonReturn {
+			deleteProject(project)
+		}
+	}
+	
 	private func addProject(title: String) {
 		withAnimation {
 			let newProject = Project(context: viewContext)
 			newProject.timestamp = Date()
 			newProject.title = title
+			
+			do {
+				try viewContext.save()
+				newProjectTitle = "" // Clear the text input
+				isProjectViewPresented = false // Close the sheet
+			} catch {
+				let nsError = error as NSError
+				fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+			}
+		}
+	}
+	
+	private func deleteProject(_ project: Project) {
+		withAnimation {
+			viewContext.delete(project)
 			
 			do {
 				try viewContext.save()
