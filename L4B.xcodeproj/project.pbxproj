@@ -16,6 +16,7 @@
 		9A554EF02A90FBA40034BD05 /* L4BTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554EEF2A90FBA40034BD05 /* L4BTests.swift */; };
 		9A554EFA2A90FBA40034BD05 /* L4BUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554EF92A90FBA40034BD05 /* L4BUITests.swift */; };
 		9A554EFC2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554EFB2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift */; };
+		9A676B4C2A910E2E00012A9D /* ProjectGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A676B4B2A910E2E00012A9D /* ProjectGridView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		9A554EF52A90FBA40034BD05 /* L4BUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = L4BUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A554EF92A90FBA40034BD05 /* L4BUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L4BUITests.swift; sourceTree = "<group>"; };
 		9A554EFB2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L4BUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		9A676B4B2A910E2E00012A9D /* ProjectGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectGridView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				9A554EE62A90FBA30034BD05 /* L4B.entitlements */,
 				9A554EE32A90FBA30034BD05 /* L4B.xcdatamodeld */,
 				9A554EDE2A90FBA30034BD05 /* Preview Content */,
+				9A676B4B2A910E2E00012A9D /* ProjectGridView.swift */,
 			);
 			path = L4B;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A676B4C2A910E2E00012A9D /* ProjectGridView.swift in Sources */,
 				9A554EE22A90FBA30034BD05 /* Persistence.swift in Sources */,
 				9A554EDB2A90FBA20034BD05 /* ContentView.swift in Sources */,
 				9A554EE52A90FBA30034BD05 /* L4B.xcdatamodeld in Sources */,
