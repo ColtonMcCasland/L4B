@@ -7,7 +7,7 @@ struct MenuOptions: View {
 			
 			Spacer()
 			
-			// Logic to create shapes
+			// Logic to draw shapes
 			
 			HStack {
 				VStack {
@@ -49,7 +49,6 @@ struct MenuOptions: View {
 //				// Handle chamfers
 //			}
 			Spacer()
-			// Add more options as needed
 		}
 	}
 }
