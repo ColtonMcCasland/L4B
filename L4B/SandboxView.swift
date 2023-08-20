@@ -1,17 +1,28 @@
 import SwiftUI
 import SceneKit
 
+struct ContentView: View {
+	var body: some View {
+		ZStack {
+			SandboxView()
+			VStack {
+				FrostedGlassMenu()
+					.frame(height: 50)
+					.overlay(MenuOptions())
+				Spacer()
+			}
+		}
+	}
+}
+
+
 struct SandboxView: NSViewRepresentable {
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
-		
-		// Set the background color to transparent
 		sceneView.backgroundColor = NSColor.clear
-		
 		sceneView.scene = createScene()
 		sceneView.allowsCameraControl = true
 		
-		// Add a pinch gesture recognizer using the coordinator
 		let pinchGesture = NSMagnificationGestureRecognizer(target: context.coordinator,
 																			 action: #selector(Coordinator.handlePinchGesture(_:)))
 		sceneView.addGestureRecognizer(pinchGesture)
@@ -73,7 +84,6 @@ struct SandboxView: NSViewRepresentable {
 				return
 			}
 			
-			// Adjust the camera's field of view for zooming
 			let pinchScale = 1.0 - gestureRecognizer.magnification
 			sceneView.pointOfView?.camera?.fieldOfView *= pinchScale
 			
@@ -82,3 +92,40 @@ struct SandboxView: NSViewRepresentable {
 	}
 }
 
+
+struct FrostedGlassMenu: NSViewRepresentable {
+	func makeNSView(context: Context) -> NSVisualEffectView {
+		let view = NSVisualEffectView()
+		view.blendingMode = .withinWindow
+		view.material = .underWindowBackground
+		view.state = .active
+		view.wantsLayer = true
+		view.layer?.backgroundColor = NSColor.white.withAlphaComponent(0.7).cgColor // Slightly transparent
+		return view
+	}
+	
+	func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+		// Update view if needed
+	}
+}
+
+struct MenuOptions: View {
+	var body: some View {
+		HStack(spacing: 0) {
+			Spacer()
+			Button("Draw Shapes") {
+				// Handle drawing shapes
+			}
+			Spacer()
+			Button("Create 3D Objects") {
+				// Handle 3D objects
+			}
+			Spacer()
+			Button("Add Chamfers") {
+				// Handle chamfers
+			}
+			Spacer()
+			// Add more options as needed
+		}
+	}
+}
