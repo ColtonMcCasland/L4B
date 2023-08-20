@@ -7,7 +7,7 @@ struct SandboxView: View {
 			SandboxContentView()
 			VStack {
 				FrostedGlassMenu()
-					.frame(height: 50)
+					.frame(height: 70)
 					.overlay(MenuOptions())
 				Spacer()
 			}
@@ -109,23 +109,3 @@ struct FrostedGlassMenu: NSViewRepresentable {
 	}
 }
 
-struct MenuOptions: View {
-	var body: some View {
-		HStack(spacing: 0) {
-			Spacer()
-			Button("Draw Shapes") {
-				// Handle drawing shapes
-			}
-			Spacer()
-			Button("Create 3D Objects") {
-				// Handle 3D objects
-			}
-			Spacer()
-			Button("Add Chamfers") {
-				// Handle chamfers
-			}
-			Spacer()
-			// Add more options as needed
-		}
-	}
-}
