@@ -2,22 +2,6 @@ import SwiftUI
 import CoreData
 import AppKit
 
-struct ContentView: View {
-	@Environment(\.managedObjectContext) private var viewContext
-	
-	var body: some View {
-		NavigationView {
-			ProjectGridView()
-		}
-	}
-}
-
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-	}
-}
-
 struct ProjectGridView: View {
 	@Environment(\.managedObjectContext) private var viewContext
 	@FetchRequest(
@@ -29,45 +13,51 @@ struct ProjectGridView: View {
 	@State private var newProjectTitle = ""
 	
 	var body: some View {
-		ScrollView {
-			LazyHGrid(rows: [GridItem(.adaptive(minimum: 250), spacing: 20)], spacing: 20) {
-				ForEach(projects) { project in
-					ZStack(alignment: .topTrailing) {
-						RoundedRectangle(cornerRadius: 10)
-							.frame(width: 250, height: 250)
-							.foregroundColor(Color(.darkGray))
-							.overlay(
-								VStack {
-									Text(project.title ?? "")
-										.font(.headline)
+		GeometryReader { geometry in
+			ScrollViewReader { scrollViewProxy in
+				ScrollView(.horizontal) {
+					LazyHGrid(rows: [GridItem(.adaptive(minimum: 250), spacing: 20)], spacing: 20) {
+						ForEach(projects) { project in
+							ZStack(alignment: .topTrailing) {
+								RoundedRectangle(cornerRadius: 10)
+									.frame(width: 250, height: 250)
+									.foregroundColor(Color(.darkGray))
+									.overlay(
+										VStack {
+											Text(project.title ?? "")
+												.font(.headline)
+												.foregroundColor(.white)
+										}
+									)
+								
+								Button(action: {
+									showDeleteConfirmation(for: project)
+								}) {
+									Image(systemName: "xmark.circle.fill")
+										.resizable()
+										.frame(width: 24, height: 24)
 										.foregroundColor(.white)
 								}
-							)
-						
-						Button(action: {
-							showDeleteConfirmation(for: project)
-						}) {
-							Image(systemName: "xmark.circle.fill")
-								.resizable()
-								.frame(width: 24, height: 24)
-								.foregroundColor(.white)
-						}
-						.padding(8)
-						.buttonStyle(BorderlessButtonStyle())
-						.onHover { isHovered in
-							// Adjust the appearance when hovering
-							// (Optional: Change the icon's color or size)
+								.padding(8)
+								.buttonStyle(BorderlessButtonStyle())
+								.onHover { isHovered in
+									// Adjust the appearance when hovering
+									// (Optional: Change the icon's color or size)
+								}
+							}
+							.frame(width: 250, height: 250)
+							.id(project) // Ensure each project has a unique identifier
 						}
 					}
-					.gesture(
-						LongPressGesture(minimumDuration: 1.0)
-							.onEnded { _ in
-								showDeleteConfirmation(for: project)
-							}
-					)
+					.padding()
+					.onChange(of: geometry.size) { _ in
+						// Scroll to the first item when window size changes
+						if let firstProject = projects.first {
+							scrollViewProxy.scrollTo(firstProject)
+						}
+					}
 				}
 			}
-			.padding()
 		}
 		.navigationTitle("Projects")
 		.toolbar {
@@ -128,24 +118,11 @@ struct ProjectGridView: View {
 	}
 }
 
-struct ProjectView: View {
-	var onSave: (String) -> Void
-	@State private var newProjectTitle = ""
-	
-	var body: some View {
-		VStack {
-			Text("Create New Project")
-				.font(.headline)
-				.padding(.bottom, 10)
-			
-			TextField("Project Title", text: $newProjectTitle)
-				.textFieldStyle(RoundedBorderTextFieldStyle())
-				.padding(.bottom, 20)
-			
-			Button("Save") {
-				onSave(newProjectTitle)
-			}
-		}
-		.padding()
+struct WidthPreferenceKey: PreferenceKey {
+	static var defaultValue: CGFloat = 0
+	static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+		value = max(value, nextValue())
 	}
 }
+
+
