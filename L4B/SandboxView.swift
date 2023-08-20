@@ -16,6 +16,12 @@ struct SandboxView: NSViewRepresentable {
 		
 		sceneView.scene = createScene()
 		sceneView.allowsCameraControl = true
+		
+		// Add a pinch gesture recognizer using the coordinator
+		let pinchGesture = NSMagnificationGestureRecognizer(target: context.coordinator,
+																			 action: #selector(Coordinator.handlePinchGesture(_:)))
+		sceneView.addGestureRecognizer(pinchGesture)
+		
 		return sceneView
 	}
 	
@@ -33,12 +39,12 @@ struct SandboxView: NSViewRepresentable {
 		
 		// Create lines extending from the center in all directions except for top and left
 		for i in (-gridLines / 2) + 1..<gridLines / 2 {
-			let horizontalLine = SCNNode(geometry: SCNGeometry.line(from: SCNVector3(-halfSize, 0, CGFloat(i) * gridSize),
-																					  to: SCNVector3(halfSize, 0, CGFloat(i) * gridSize)))
+			let horizontalLine = SCNNode(geometry: createLine(from: SCNVector3(-halfSize, 0, CGFloat(i) * gridSize),
+																			  to: SCNVector3(halfSize, 0, CGFloat(i) * gridSize)))
 			scene.rootNode.addChildNode(horizontalLine)
 			
-			let verticalLine = SCNNode(geometry: SCNGeometry.line(from: SCNVector3(CGFloat(i) * gridSize, 0, -halfSize),
-																					to: SCNVector3(CGFloat(i) * gridSize, 0, halfSize)))
+			let verticalLine = SCNNode(geometry: createLine(from: SCNVector3(CGFloat(i) * gridSize, 0, -halfSize),
+																			to: SCNVector3(CGFloat(i) * gridSize, 0, halfSize)))
 			scene.rootNode.addChildNode(verticalLine)
 		}
 		
@@ -55,13 +61,30 @@ struct SandboxView: NSViewRepresentable {
 	func degreesToRadians(_ degrees: Int) -> CGFloat {
 		return CGFloat(degrees) * .pi / 180
 	}
-}
-
-extension SCNGeometry {
-	class func line(from start: SCNVector3, to end: SCNVector3) -> SCNGeometry {
+	
+	func createLine(from start: SCNVector3, to end: SCNVector3) -> SCNGeometry {
 		let indices: [UInt32] = [0, 1]
 		let source = SCNGeometrySource(vertices: [start, end])
 		let element = SCNGeometryElement(indices: indices, primitiveType: .line)
 		return SCNGeometry(sources: [source], elements: [element])
 	}
+	
+	func makeCoordinator() -> Coordinator {
+		Coordinator()
+	}
+	
+	class Coordinator: NSObject {
+		@objc func handlePinchGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
+			guard let sceneView = gestureRecognizer.view as? SCNView else {
+				return
+			}
+			
+			// Adjust the camera's field of view for zooming
+			let pinchScale = 1.0 - gestureRecognizer.magnification
+			sceneView.pointOfView?.camera?.fieldOfView *= pinchScale
+			
+			gestureRecognizer.magnification = 0.0
+		}
+	}
 }
+
