@@ -9,6 +9,8 @@ struct ProjectGridView: View {
 		animation: .default)
 	private var projects: FetchedResults<Project>
 	
+	@State private var isAddingProject = false
+	
 	var body: some View {
 		NavigationView {
 			GeometryReader { geometry in
@@ -57,6 +59,32 @@ struct ProjectGridView: View {
 				}
 			}
 			.navigationTitle("Projects")
+			.toolbar {
+				// Add button to show the new project sheet
+				Button(action: { isAddingProject.toggle() }) {
+					Image(systemName: "plus")
+				}
+			}
+			.sheet(isPresented: $isAddingProject) {
+				ProjectView(isPresented: $isAddingProject) { title in
+					addProject(title: title)
+				}
+			}
+		}
+	}
+
+	
+	private func addProject(title: String) {
+		withAnimation {
+			let newProject = Project(context: viewContext)
+			newProject.title = title
+			newProject.timestamp = Date()
+			do {
+				try viewContext.save()
+			} catch {
+				let nsError = error as NSError
+				fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+			}
 		}
 	}
 	
@@ -84,5 +112,29 @@ struct ProjectGridView: View {
 				fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
 			}
 		}
+	}
+}
+
+struct ProjectView: View {
+	@Binding var isPresented: Bool
+	var onSave: (String) -> Void
+	@State private var newProjectTitle = ""
+	
+	var body: some View {
+		VStack {
+			Text("Create New Project")
+				.font(.headline)
+				.padding(.bottom, 10)
+			
+			TextField("Project Title", text: $newProjectTitle)
+				.textFieldStyle(RoundedBorderTextFieldStyle())
+				.padding(.bottom, 20)
+			
+			Button("Save") {
+				onSave(newProjectTitle) // Pass the title to the onSave closure
+				isPresented = false // Dismiss the sheet
+			}
+		}
+		.padding()
 	}
 }

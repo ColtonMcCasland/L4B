@@ -1,10 +1,10 @@
 import SwiftUI
 import SceneKit
 
-struct ContentView: View {
+struct SandboxView: View {
 	var body: some View {
 		ZStack {
-			SandboxView()
+			SandboxContentView()
 			VStack {
 				FrostedGlassMenu()
 					.frame(height: 50)
@@ -16,7 +16,7 @@ struct ContentView: View {
 }
 
 
-struct SandboxView: NSViewRepresentable {
+struct SandboxContentView: NSViewRepresentable {
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.clear

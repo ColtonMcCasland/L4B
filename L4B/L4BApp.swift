@@ -13,7 +13,7 @@ struct L4BApp: App {
 	
 	var body: some Scene {
 		WindowGroup {
-			ContentView()
+			SandboxView()
 				.frame(minWidth: 700, minHeight: 700) // Set the minimum size here
 
 				.environment(\.managedObjectContext, persistenceController.container.viewContext)
