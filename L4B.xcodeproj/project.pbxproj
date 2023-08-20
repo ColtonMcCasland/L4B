@@ -17,7 +17,6 @@
 		9A554EFC2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554EFB2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift */; };
 		9A8827582A91A74F00CA1B27 /* SandboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8827572A91A74F00CA1B27 /* SandboxView.swift */; };
 		9A88275B2A91D0F400CA1B27 /* MenuOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A88275A2A91D0F400CA1B27 /* MenuOptions.swift */; };
-		9A8827602A92563700CA1B27 /* CubeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A88275F2A92563700CA1B27 /* CubeController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +51,6 @@
 		9A554EFB2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L4BUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9A8827572A91A74F00CA1B27 /* SandboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxView.swift; sourceTree = "<group>"; };
 		9A88275A2A91D0F400CA1B27 /* MenuOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptions.swift; sourceTree = "<group>"; };
-		9A88275F2A92563700CA1B27 /* CubeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +109,6 @@
 				9A554EE32A90FBA30034BD05 /* L4B.xcdatamodeld */,
 				9A554EDE2A90FBA30034BD05 /* Preview Content */,
 				9A88275A2A91D0F400CA1B27 /* MenuOptions.swift */,
-				9A88275F2A92563700CA1B27 /* CubeController.swift */,
 			);
 			path = L4B;
 			sourceTree = "<group>";
@@ -275,7 +272,6 @@
 				9A554EE52A90FBA30034BD05 /* L4B.xcdatamodeld in Sources */,
 				9A88275B2A91D0F400CA1B27 /* MenuOptions.swift in Sources */,
 				9A8827582A91A74F00CA1B27 /* SandboxView.swift in Sources */,
-				9A8827602A92563700CA1B27 /* CubeController.swift in Sources */,
 				9A554ED92A90FBA20034BD05 /* L4BApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
