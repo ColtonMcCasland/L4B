@@ -1,12 +1,6 @@
 import SwiftUI
 import SceneKit
 
-struct ContentView: View {
-	var body: some View {
-		SandboxView()
-	}
-}
-
 struct SandboxView: NSViewRepresentable {
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
