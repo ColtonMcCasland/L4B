@@ -1,16 +1,24 @@
 import SwiftUI
 import SceneKit
 
+
+class RotationState: ObservableObject {
+	@Published var rotation: SCNVector3 = SCNVector3Zero
+}
+
+
 struct SandboxView: View {
+	@ObservedObject var rotationState = RotationState() // Initialized within the struct
+
 	var body: some View {
 		ZStack {
-			SandboxContentView()
+			SandboxContentView(rotationState: rotationState)
 			VStack {
 				FrostedGlassMenu()
 					.frame(height: 70)
 				HStack {
 					Spacer()
-					CubeControllerView()
+					CubeControllerView(rotationState: rotationState) // Pass rotationState here
 						.frame(width: 100, height: 100)
 						.padding(.top, 10)
 						.padding(.trailing, 10)
@@ -22,6 +30,8 @@ struct SandboxView: View {
 }
 
 struct SandboxContentView: NSViewRepresentable {
+	@ObservedObject var rotationState: RotationState // Add this line
+
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.clear
@@ -31,8 +41,9 @@ struct SandboxContentView: NSViewRepresentable {
 	}
 	
 	func updateNSView(_ nsView: SCNView, context: Context) {
-		// Update view if needed
+		nsView.scene?.rootNode.childNode(withName: "cameraNode", recursively: false)?.eulerAngles = rotationState.rotation
 	}
+
 	
 	func createScene() -> SCNScene {
 		let scene = SCNScene()
@@ -55,24 +66,38 @@ struct SandboxContentView: NSViewRepresentable {
 		
 		// Add camera
 		let cameraNode = SCNNode()
-		cameraNode.camera = SCNCamera()
-		cameraNode.position = SCNVector3(x: 0, y: 15, z: 15)
-		cameraNode.eulerAngles = SCNVector3(x: degreesToRadians(-45), y: 0, z: 0)
+		cameraNode.name = "cameraNode" // Assign a name here
+		
+		let camera = SCNCamera()
+		camera.fieldOfView = 60 // Adjust the field of view to make sure the edges are visible
+		
+		// Position the camera slightly further away from the grid and adjust its angle
+		let cameraPosition = SCNVector3(x: 0, y: halfSize / 2, z: halfSize * 2.5) // Adjust the z value for a more zoomed-out view
+		cameraNode.position = cameraPosition
+		
+		let tiltAngleX: Float = -Float.pi / 8 // Adjust the angle for a downward tilt
+		let tiltAngleZ: Float = 0 // Keep the Z-axis rotation angle 0 for your requirement
+		
+		cameraNode.eulerAngles = SCNVector3(tiltAngleX, 0, tiltAngleZ) // Apply the rotation to tilt the camera downward
+		
+		cameraNode.camera = camera
 		scene.rootNode.addChildNode(cameraNode)
 		
 		return scene
 	}
-	
+
+
 	func degreesToRadians(_ degrees: Int) -> CGFloat {
 		return CGFloat(degrees) * .pi / 180
 	}
 	
 	func createLine(from start: SCNVector3, to end: SCNVector3) -> SCNGeometry {
-		let indices: [UInt32] = [0, 1]
+		let indices: [Int32] = [0, 1]
 		let source = SCNGeometrySource(vertices: [start, end])
 		let element = SCNGeometryElement(indices: indices, primitiveType: .line)
 		return SCNGeometry(sources: [source], elements: [element])
 	}
+
 	
 	func makeCoordinator() -> Coordinator {
 		Coordinator()
@@ -117,6 +142,8 @@ struct FrostedGlassMenu: NSViewRepresentable {
 
 
 struct CubeControllerView: NSViewRepresentable {
+	@ObservedObject var rotationState: RotationState
+
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.clear
@@ -222,31 +249,36 @@ struct CubeControllerView: NSViewRepresentable {
 		
 		return material
 	}
-	
-	
+
 	
 	func updateNSView(_ nsView: SCNView, context: Context) {
-		// Update view if needed
-	}
-	
-	func makeCoordinator() -> Coordinator {
-		Coordinator()
+		nsView.scene?.rootNode.childNode(withName: "cameraNode", recursively: false)?.eulerAngles = rotationState.rotation
 	}
 	
 	class Coordinator: NSObject {
+		var rotationState: RotationState
+		
+		init(rotationState: RotationState) {
+			self.rotationState = rotationState
+		}
+		
 		@objc func handlePanGesture(_ gestureRecognizer: NSPanGestureRecognizer) {
-			guard let sceneView = gestureRecognizer.view as? SCNView else {
-				return
-			}
-			
+			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
 			let translation = gestureRecognizer.translation(in: sceneView)
-			let xRotation = Float(-translation.y) * 0.01 // Reversed sign for up-down movement
-			let yRotation = Float(translation.x) * 0.01 // Keep the sign for left-right movement
+			let xRotation = Float(-translation.y) * 0.01
+			let yRotation = Float(translation.x) * 0.01
 			
-			sceneView.scene?.rootNode.childNodes.first?.eulerAngles.x += CGFloat(xRotation)
-			sceneView.scene?.rootNode.childNodes.first?.eulerAngles.y += CGFloat(yRotation)
+			rotationState.rotation.x += CGFloat(xRotation)
+			rotationState.rotation.y += CGFloat(yRotation)
+			
+			sceneView.scene?.rootNode.childNodes.first?.eulerAngles = rotationState.rotation
 			
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
 	}
+	
+	func makeCoordinator() -> Coordinator {
+		Coordinator(rotationState: rotationState)
+	}
 }
+
