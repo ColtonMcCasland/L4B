@@ -106,12 +106,12 @@
 				9A554ED82A90FBA20034BD05 /* L4BApp.swift */,
 				9A554EDA2A90FBA20034BD05 /* ProjectGridView.swift */,
 				9A88274F2A91981600CA1B27 /* ProjectView.swift */,
+				9A8827572A91A74F00CA1B27 /* SandboxView.swift */,
 				9A554EDC2A90FBA30034BD05 /* Assets.xcassets */,
 				9A554EE12A90FBA30034BD05 /* Persistence.swift */,
 				9A554EE62A90FBA30034BD05 /* L4B.entitlements */,
 				9A554EE32A90FBA30034BD05 /* L4B.xcdatamodeld */,
 				9A554EDE2A90FBA30034BD05 /* Preview Content */,
-				9A8827572A91A74F00CA1B27 /* SandboxView.swift */,
 			);
 			path = L4B;
 			sourceTree = "<group>";
