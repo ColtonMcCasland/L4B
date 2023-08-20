@@ -13,7 +13,7 @@ struct L4BApp: App {
 
     var body: some Scene {
         WindowGroup {
-			  ProjectGridView()
+			  SandboxView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
