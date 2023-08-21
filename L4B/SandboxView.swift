@@ -100,13 +100,17 @@ struct SandboxContentView: NSViewRepresentable {
 		camera.fieldOfView = 60 // Adjust the field of view to make sure the edges are visible
 		
 		// Position the camera slightly further away from the grid and adjust its angle
-		let cameraPosition = SCNVector3(x: 0, y: halfSize / 2, z: halfSize * 2.5) // Adjust the z value for a more zoomed-out view
+		
+		
+														// this tilts the camera down towards the grid,
+														// halfSize / 2
+		let cameraPosition = SCNVector3(x: 0, y: 0, z: halfSize * 2.5) // Adjust the z value for a more zoomed-out view
 		cameraNode.position = cameraPosition
 		
-		let tiltAngleX: Float = -Float.pi / 8 // Adjust the angle for a downward tilt
-		let tiltAngleZ: Float = 0 // Keep the Z-axis rotation angle 0 for your requirement
-		
-		cameraNode.eulerAngles = SCNVector3(tiltAngleX, 0, tiltAngleZ) // Apply the rotation to tilt the camera downward
+//		let tiltAngleX: Float = -Float.pi / 8 // Adjust the angle for a downward tilt
+//		let tiltAngleZ: Float = 0 // Keep the Z-axis rotation angle 0 for your requirement
+//
+//		cameraNode.eulerAngles = SCNVector3(tiltAngleX, 0, tiltAngleZ) // Apply the rotation to tilt the camera downward
 		
 		cameraNode.camera = camera
 		scene.rootNode.addChildNode(cameraNode)
