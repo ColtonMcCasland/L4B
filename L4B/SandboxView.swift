@@ -3,23 +3,37 @@ import SceneKit
 
 
 class RotationState: ObservableObject {
-	@Published var rotation: SCNVector3 = SCNVector3Zero
+	@Published var rotation: SCNVector3 = SCNVector3Zero {
+		didSet {
+			print("Rotation updated: \(rotation)")
+		}
+	}
+}
+
+class PositionState: ObservableObject {
+	@Published var position: SCNVector3 = SCNVector3Zero {
+		didSet {
+			print("Position updated: \(position)")
+		}
+	}
 }
 
 
 struct SandboxView: View {
-	@ObservedObject var rotationState = RotationState() // Initialized within the struct
+	@ObservedObject var rotationState = RotationState()
+	@ObservedObject var positionState = PositionState() // Add this line
+	
 
 	var body: some View {
 		ZStack {
-			SandboxContentView(rotationState: rotationState)
+			SandboxContentView(rotationState: rotationState, positionState: positionState) // Pass both states here
 			VStack {
 				FrostedGlassMenu()
 					.frame(height: 70)
 				HStack {
 					Spacer()
-					CubeControllerView(rotationState: rotationState) // Pass rotationState here
-						.frame(width: 100, height: 100)
+					CubeControllerView(rotationState: rotationState  ,positionState: positionState)
+					.frame(width: 100, height: 100)
 						.padding(.top, 10)
 						.padding(.trailing, 10)
 				}
@@ -30,8 +44,9 @@ struct SandboxView: View {
 }
 
 struct SandboxContentView: NSViewRepresentable {
-	@ObservedObject var rotationState: RotationState // Add this line
-
+	@ObservedObject var rotationState: RotationState
+	@ObservedObject var positionState: PositionState // Add this line
+	
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.clear
@@ -41,8 +56,16 @@ struct SandboxContentView: NSViewRepresentable {
 	}
 	
 	func updateNSView(_ nsView: SCNView, context: Context) {
-		nsView.scene?.rootNode.childNode(withName: "cameraNode", recursively: false)?.eulerAngles = rotationState.rotation
+		// Update the rotation of the grid nodes
+		for node in nsView.scene?.rootNode.childNodes ?? [] {
+			if node.name == "gridNode" {
+				node.eulerAngles = rotationState.rotation
+			}
+		}
 	}
+
+
+
 
 	
 	func createScene() -> SCNScene {
@@ -57,13 +80,15 @@ struct SandboxContentView: NSViewRepresentable {
 		for i in (-gridLines / 2) + 1..<gridLines / 2 {
 			let horizontalLine = SCNNode(geometry: createLine(from: SCNVector3(-halfSize, 0, CGFloat(i) * gridSize),
 																			  to: SCNVector3(halfSize, 0, CGFloat(i) * gridSize)))
+			horizontalLine.name = "gridNode" // Add this line
 			scene.rootNode.addChildNode(horizontalLine)
 			
 			let verticalLine = SCNNode(geometry: createLine(from: SCNVector3(CGFloat(i) * gridSize, 0, -halfSize),
 																			to: SCNVector3(CGFloat(i) * gridSize, 0, halfSize)))
+			verticalLine.name = "gridNode" // Add this line
 			scene.rootNode.addChildNode(verticalLine)
 		}
-		
+
 		// Add camera
 		let cameraNode = SCNNode()
 		cameraNode.name = "cameraNode" // Assign a name here
@@ -143,7 +168,8 @@ struct FrostedGlassMenu: NSViewRepresentable {
 
 struct CubeControllerView: NSViewRepresentable {
 	@ObservedObject var rotationState: RotationState
-
+	@ObservedObject var positionState: PositionState // Add this line
+	
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.clear
@@ -164,6 +190,8 @@ struct CubeControllerView: NSViewRepresentable {
 		cube.materials = [faceMaterial, faceMaterial, faceMaterial, faceMaterial, faceMaterial, faceMaterial]
 		
 		let cubeNode = SCNNode(geometry: cube)
+		cubeNode.name = "cubeNode"
+		cubeNode.eulerAngles = SCNVector3(0, 0, 0) // Adjust the initial rotation here if needed
 		sceneView.scene?.rootNode.addChildNode(cubeNode)
 		
 		// Create the vertices for the edges
@@ -252,11 +280,12 @@ struct CubeControllerView: NSViewRepresentable {
 
 	
 	func updateNSView(_ nsView: SCNView, context: Context) {
-		nsView.scene?.rootNode.childNode(withName: "cameraNode", recursively: false)?.eulerAngles = rotationState.rotation
+		nsView.scene?.rootNode.childNode(withName: "cubeNode", recursively: false)?.eulerAngles = rotationState.rotation
 	}
+
 	
 	class Coordinator: NSObject {
-		var rotationState: RotationState
+		@ObservedObject var rotationState: RotationState
 		
 		init(rotationState: RotationState) {
 			self.rotationState = rotationState
@@ -264,6 +293,7 @@ struct CubeControllerView: NSViewRepresentable {
 		
 		@objc func handlePanGesture(_ gestureRecognizer: NSPanGestureRecognizer) {
 			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
+			
 			let translation = gestureRecognizer.translation(in: sceneView)
 			let xRotation = Float(-translation.y) * 0.01
 			let yRotation = Float(translation.x) * 0.01
@@ -271,11 +301,12 @@ struct CubeControllerView: NSViewRepresentable {
 			rotationState.rotation.x += CGFloat(xRotation)
 			rotationState.rotation.y += CGFloat(yRotation)
 			
-			sceneView.scene?.rootNode.childNodes.first?.eulerAngles = rotationState.rotation
+			// Remove the code that updates the cube's rotation here
 			
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
 	}
+
 	
 	func makeCoordinator() -> Coordinator {
 		Coordinator(rotationState: rotationState)
