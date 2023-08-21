@@ -26,7 +26,7 @@ struct SandboxView: View {
 
 	var body: some View {
 		ZStack {
-			SandboxContentView(rotationState: rotationState, positionState: positionState) // Pass both states here
+			SandboxContentView(rotationState: rotationState) // Pass both states here
 			VStack {
 				FrostedGlassMenu()
 					.frame(height: 70)
@@ -45,7 +45,6 @@ struct SandboxView: View {
 
 struct SandboxContentView: NSViewRepresentable {
 	@ObservedObject var rotationState: RotationState
-	@ObservedObject var positionState: PositionState // Add this line
 	
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
@@ -56,13 +55,17 @@ struct SandboxContentView: NSViewRepresentable {
 	}
 	
 	func updateNSView(_ nsView: SCNView, context: Context) {
-		// Update the rotation of the grid nodes
 		for node in nsView.scene?.rootNode.childNodes ?? [] {
 			if node.name == "gridNode" {
 				node.eulerAngles = rotationState.rotation
+				print("Grid Rotation: \(rotationState.rotation)")
+			} else if node.name == "cubeNode" {
+				node.eulerAngles = rotationState.rotation
+				print("Cube Rotation: \(rotationState.rotation)")
 			}
 		}
 	}
+
 
 
 
@@ -76,18 +79,18 @@ struct SandboxContentView: NSViewRepresentable {
 		let gridLines = 10
 		let halfSize = gridSize * CGFloat(gridLines) / 2.0
 		
-		// Create lines extending from the center in all directions except for top and left
 		for i in (-gridLines / 2) + 1..<gridLines / 2 {
 			let horizontalLine = SCNNode(geometry: createLine(from: SCNVector3(-halfSize, 0, CGFloat(i) * gridSize),
 																			  to: SCNVector3(halfSize, 0, CGFloat(i) * gridSize)))
-			horizontalLine.name = "gridNode" // Add this line
+			horizontalLine.name = "gridNode"
 			scene.rootNode.addChildNode(horizontalLine)
 			
 			let verticalLine = SCNNode(geometry: createLine(from: SCNVector3(CGFloat(i) * gridSize, 0, -halfSize),
 																			to: SCNVector3(CGFloat(i) * gridSize, 0, halfSize)))
-			verticalLine.name = "gridNode" // Add this line
+			verticalLine.name = "gridNode"
 			scene.rootNode.addChildNode(verticalLine)
 		}
+
 
 		// Add camera
 		let cameraNode = SCNNode()
