@@ -15,7 +15,7 @@ struct SandboxView: View {
 					.frame(height: 70)
 				HStack {
 					Spacer()
-					CubeControllerView(rotationState: rotationState  ,positionState: positionState)
+					CubeControllerView(rotationState: rotationState)
 					.frame(width: 100, height: 100)
 						.padding(.top, 10)
 						.padding(.trailing, 10)

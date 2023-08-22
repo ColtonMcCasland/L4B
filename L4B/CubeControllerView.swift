@@ -11,7 +11,6 @@ import SceneKit
 
 struct CubeControllerView: NSViewRepresentable {
 	@ObservedObject var rotationState: RotationState
-	@ObservedObject var positionState: PositionState // Add this line
 	
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
@@ -172,7 +171,6 @@ struct CubeControllerView: NSViewRepresentable {
 			
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
-
 	}
 	
 	

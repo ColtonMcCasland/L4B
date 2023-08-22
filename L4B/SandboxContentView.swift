@@ -24,13 +24,10 @@ struct SandboxContentView: NSViewRepresentable {
 		for node in nsView.scene?.rootNode.childNodes ?? [] {
 			if node.name == "gridNode" {
 				node.eulerAngles = rotationState.rotation
-				print("Grid Rotation: \(rotationState.rotation)")
-			} else if node.name == "cubeNode" {
-				node.eulerAngles = rotationState.rotation
-				print("Cube Rotation: \(rotationState.rotation)")
 			}
 		}
 	}
+
 	
 	
 	
@@ -39,7 +36,9 @@ struct SandboxContentView: NSViewRepresentable {
 	
 	func createScene() -> SCNScene {
 		let scene = SCNScene()
-		
+		let gridNode = SCNNode()
+		gridNode.name = "gridNode"
+		scene.rootNode.addChildNode(gridNode)
 		// Create a floor axis grid
 		let gridSize: CGFloat = 1
 		let gridLines = 10
@@ -48,15 +47,12 @@ struct SandboxContentView: NSViewRepresentable {
 		for i in (-gridLines / 2) + 1..<gridLines / 2 {
 			let horizontalLine = SCNNode(geometry: createLine(from: SCNVector3(-halfSize, 0, CGFloat(i) * gridSize),
 																			  to: SCNVector3(halfSize, 0, CGFloat(i) * gridSize)))
-			horizontalLine.name = "gridNode"
-			scene.rootNode.addChildNode(horizontalLine)
+			gridNode.addChildNode(horizontalLine) // Add to the parent grid node
 			
 			let verticalLine = SCNNode(geometry: createLine(from: SCNVector3(CGFloat(i) * gridSize, 0, -halfSize),
 																			to: SCNVector3(CGFloat(i) * gridSize, 0, halfSize)))
-			verticalLine.name = "gridNode"
-			scene.rootNode.addChildNode(verticalLine)
+			gridNode.addChildNode(verticalLine) // Add to the parent grid node
 		}
-		
 		
 		// Add camera
 		let cameraNode = SCNNode()
@@ -66,23 +62,15 @@ struct SandboxContentView: NSViewRepresentable {
 		camera.fieldOfView = 60 // Adjust the field of view to make sure the edges are visible
 		
 		// Position the camera slightly further away from the grid and adjust its angle
-		
-		
-		// this tilts the camera down towards the grid,
-		// halfSize / 2
 		let cameraPosition = SCNVector3(x: 0, y: 0, z: halfSize * 2.5) // Adjust the z value for a more zoomed-out view
 		cameraNode.position = cameraPosition
-		
-		//		let tiltAngleX: Float = -Float.pi / 8 // Adjust the angle for a downward tilt
-		//		let tiltAngleZ: Float = 0 // Keep the Z-axis rotation angle 0 for your requirement
-		//
-		//		cameraNode.eulerAngles = SCNVector3(tiltAngleX, 0, tiltAngleZ) // Apply the rotation to tilt the camera downward
 		
 		cameraNode.camera = camera
 		scene.rootNode.addChildNode(cameraNode)
 		
 		return scene
 	}
+
 	
 	
 	func degreesToRadians(_ degrees: Int) -> CGFloat {
