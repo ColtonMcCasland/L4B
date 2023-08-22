@@ -25,10 +25,8 @@ struct CubeControllerView: NSViewRepresentable {
 		gridMaterial.diffuse.wrapS = .repeat
 		gridMaterial.diffuse.wrapT = .repeat
 		gridMaterial.diffuse.contentsTransform = SCNMatrix4MakeScale(3.0, 3.0, 1.0) // Adjust the scale
-
 		
 		let cube = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
-		
 		
 		// Create a white material for the faces
 		let faceMaterial = SCNMaterial()
@@ -41,14 +39,12 @@ struct CubeControllerView: NSViewRepresentable {
 		// Set the materials for each face
 		cube.materials = [faceMaterial, faceMaterial, faceMaterial, faceMaterial, faceMaterial, faceMaterial]
 		
-	
 		let cubeNode = SCNNode(geometry: cube)
 		cubeNode.name = "cubeNode"
 		sceneView.scene?.rootNode.addChildNode(cubeNode)
 		
 		// Set initial rotation of cube based on rotationState
 		cubeNode.eulerAngles = rotationState.rotation
-		
 		
 		// Create the vertices for the edges
 		let vertices: [SCNVector3] = [
@@ -76,19 +72,13 @@ struct CubeControllerView: NSViewRepresentable {
 		let edgeNode = SCNNode(geometry: edgeGeometry)
 		cubeNode.addChildNode(edgeNode)
 		
-		
 		// Add labels to all sides of the cube
 		addText("Front", to: cubeNode, at: SCNVector3(0, 1.1, 0), rotation: SCNVector4(1, 0, 0, -1.57079632679489661923132169163975144))
 		addText("Back", to: cubeNode, at: SCNVector3(0, -1.1, 0), rotation: SCNVector4(1, 0, 0, 1.57079632679489661923132169163975144))
-		
-		
 		addText("Bottom", to: cubeNode, at: SCNVector3(0, 0, 1.1), rotation: SCNVector4(1, 0, 0, 0))
 		addText("Top", to: cubeNode, at: SCNVector3(0, 0, -1.1), rotation: SCNVector4(1, 0, 0, 3.14159265358979323846264338327950288))
-		
-		
 		addText("Left", to: cubeNode, at: SCNVector3(-1, 0, 0), rotation: SCNVector4(0, 1, 0, -Float.pi / 2))
 		addText("Right", to: cubeNode, at: SCNVector3(1, 0, 0), rotation: SCNVector4(0, 1, 0, Float.pi / 2))
-		
 		
 		// Position the camera to view the cube
 		let cameraNode = SCNNode()
@@ -102,9 +92,6 @@ struct CubeControllerView: NSViewRepresentable {
 		
 		return sceneView
 	}
-	
-	
-	
 	
 	func addText(_ text: String, to node: SCNNode, at position: SCNVector3, rotation: SCNVector4) {
 		let textGeometry = SCNText(string: text, extrusionDepth: 0.05) // Adjust extrusionDepth as needed
@@ -126,8 +113,6 @@ struct CubeControllerView: NSViewRepresentable {
 		
 		node.addChildNode(textNode)
 	}
-
-
 	
 	func createMaterial(with text: String) -> SCNMaterial {
 		let material = SCNMaterial()
@@ -156,7 +141,6 @@ struct CubeControllerView: NSViewRepresentable {
 		}
 	}
 	
-	
 	class Coordinator: NSObject {
 		@ObservedObject var rotationState: RotationState
 		
@@ -178,9 +162,6 @@ struct CubeControllerView: NSViewRepresentable {
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
 	}
-
-	
-	
 	
 	func makeCoordinator() -> Coordinator {
 		Coordinator(rotationState: rotationState)

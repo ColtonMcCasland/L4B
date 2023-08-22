@@ -109,5 +109,4 @@ struct SandboxContentView: NSViewRepresentable {
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
 	}
-
 }
