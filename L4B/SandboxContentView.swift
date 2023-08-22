@@ -14,7 +14,7 @@ struct SandboxContentView: NSViewRepresentable {
 	
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
-		sceneView.backgroundColor = NSColor.clear
+		sceneView.backgroundColor = NSColor.white
 		sceneView.scene = createScene()
 		sceneView.allowsCameraControl = true
 		
@@ -80,8 +80,18 @@ struct SandboxContentView: NSViewRepresentable {
 		let indices: [Int32] = [0, 1]
 		let source = SCNGeometrySource(vertices: [start, end])
 		let element = SCNGeometryElement(indices: indices, primitiveType: .line)
-		return SCNGeometry(sources: [source], elements: [element])
+		let geometry = SCNGeometry(sources: [source], elements: [element])
+		
+		// Create a material with a black color
+		let material = SCNMaterial()
+		material.diffuse.contents = NSColor.black
+		
+		// Apply the material to the geometry
+		geometry.materials = [material]
+		
+		return geometry
 	}
+
 	
 	
 	func makeCoordinator() -> Coordinator {
