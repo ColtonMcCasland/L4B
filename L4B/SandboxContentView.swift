@@ -17,6 +17,11 @@ struct SandboxContentView: NSViewRepresentable {
 		sceneView.backgroundColor = NSColor.clear
 		sceneView.scene = createScene()
 		sceneView.allowsCameraControl = true
+		
+		// Add pan gesture recognizer
+		let panGesture = NSPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePanGesture(_:)))
+		sceneView.addGestureRecognizer(panGesture)
+
 		return sceneView
 	}
 	
@@ -27,12 +32,6 @@ struct SandboxContentView: NSViewRepresentable {
 			}
 		}
 	}
-
-	
-	
-	
-	
-	
 	
 	func createScene() -> SCNScene {
 		let scene = SCNScene()
@@ -86,19 +85,29 @@ struct SandboxContentView: NSViewRepresentable {
 	
 	
 	func makeCoordinator() -> Coordinator {
-		Coordinator()
+		Coordinator(rotationState: rotationState)
 	}
 	
 	class Coordinator: NSObject {
-		@objc func handlePinchGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
-			guard let sceneView = gestureRecognizer.view as? SCNView else {
-				return
-			}
+		@ObservedObject var rotationState: RotationState
+		
+		init(rotationState: RotationState) {
+			self.rotationState = rotationState
+			super.init()
+		}
+		
+		@objc func handlePanGesture(_ gestureRecognizer: NSPanGestureRecognizer) {
+			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
 			
-			let pinchScale = 1.0 - gestureRecognizer.magnification
-			sceneView.pointOfView?.camera?.fieldOfView *= pinchScale
+			let translation = gestureRecognizer.translation(in: sceneView)
+			let xRotation = Float(-translation.y) * 0.01
+			let yRotation = Float(translation.x) * 0.01
 			
-			gestureRecognizer.magnification = 0.0
+			rotationState.rotation.x += CGFloat(xRotation)
+			rotationState.rotation.y += CGFloat(yRotation)
+			
+			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
 	}
+
 }

@@ -78,10 +78,14 @@ struct CubeControllerView: NSViewRepresentable {
 		
 		
 		// Add labels to all sides of the cube
-		addText("Top", to: cubeNode, at: SCNVector3(0, 1.1, 0), rotation: SCNVector4(1, 0, 0, -1.57079632679489661923132169163975144))
-		addText("Bottom", to: cubeNode, at: SCNVector3(0, -1.1, 0), rotation: SCNVector4(1, 0, 0, 1.57079632679489661923132169163975144))
-		addText("Front", to: cubeNode, at: SCNVector3(0, 0, 1.1), rotation: SCNVector4(1, 0, 0, 0))
-		addText("Back", to: cubeNode, at: SCNVector3(0, 0, -1.1), rotation: SCNVector4(1, 0, 0, 3.14159265358979323846264338327950288))
+		addText("Front", to: cubeNode, at: SCNVector3(0, 1.1, 0), rotation: SCNVector4(1, 0, 0, -1.57079632679489661923132169163975144))
+		addText("Back", to: cubeNode, at: SCNVector3(0, -1.1, 0), rotation: SCNVector4(1, 0, 0, 1.57079632679489661923132169163975144))
+		
+		
+		addText("Bottom", to: cubeNode, at: SCNVector3(0, 0, 1.1), rotation: SCNVector4(1, 0, 0, 0))
+		addText("Top", to: cubeNode, at: SCNVector3(0, 0, -1.1), rotation: SCNVector4(1, 0, 0, 3.14159265358979323846264338327950288))
+		
+		
 		addText("Left", to: cubeNode, at: SCNVector3(-1, 0, 0), rotation: SCNVector4(0, 1, 0, -Float.pi / 2))
 		addText("Right", to: cubeNode, at: SCNVector3(1, 0, 0), rotation: SCNVector4(0, 1, 0, Float.pi / 2))
 		
@@ -142,16 +146,15 @@ struct CubeControllerView: NSViewRepresentable {
 	}
 	
 	func updateNSView(_ nsView: SCNView, context: Context) {
-		for node in nsView.scene?.rootNode.childNodes ?? [] {
-			if node.name == "cubeNode" {
-				node.eulerAngles = rotationState.rotation
-			}
-			if node.name == "gridNode" {
-				node.eulerAngles = rotationState.rotation
-			}
+		if let cubeNode = nsView.scene?.rootNode.childNode(withName: "cubeNode", recursively: false) {
+			// Apply the grid's rotation to the cube
+			cubeNode.eulerAngles = rotationState.rotation
+			
+			// Apply additional rotation to align the grid with the bottom face of the cube
+			// (You may need to adjust this rotation based on your specific scene setup)
+			cubeNode.eulerAngles.x += CGFloat.pi / 2
 		}
 	}
-
 	
 	
 	class Coordinator: NSObject {
@@ -175,11 +178,13 @@ struct CubeControllerView: NSViewRepresentable {
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
 	}
+
 	
 	
 	
 	func makeCoordinator() -> Coordinator {
 		Coordinator(rotationState: rotationState)
 	}
+
 }
 
