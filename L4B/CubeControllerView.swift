@@ -146,6 +146,9 @@ struct CubeControllerView: NSViewRepresentable {
 			if node.name == "cubeNode" {
 				node.eulerAngles = rotationState.rotation
 			}
+			if node.name == "gridNode" {
+				node.eulerAngles = rotationState.rotation
+			}
 		}
 	}
 
