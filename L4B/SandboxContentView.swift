@@ -21,6 +21,11 @@ struct SandboxContentView: NSViewRepresentable {
 		// Add pan gesture recognizer
 		let panGesture = NSPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePanGesture(_:)))
 		sceneView.addGestureRecognizer(panGesture)
+		
+		// Add rotation gesture recognizer for two-finger twisting
+		let rotationGesture = NSRotationGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleRotationGesture(_:)))
+		sceneView.addGestureRecognizer(rotationGesture)
+
 
 		return sceneView
 	}
@@ -117,6 +122,19 @@ struct SandboxContentView: NSViewRepresentable {
 			rotationState.rotation.y += CGFloat(yRotation)
 			
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
+		}
+		
+		@objc func handleRotationGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
+			
+			// Get the rotation angle from the gesture in radians
+			let twistAngle = CGFloat(gestureRecognizer.rotation)
+			
+			// Update the shared rotation state to synchronize the cube and grid
+			rotationState.rotation.y += twistAngle
+			
+			// Reset the rotation for continuous twisting
+			gestureRecognizer.rotation = 0
 		}
 	}
 }
