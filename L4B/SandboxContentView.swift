@@ -30,9 +30,6 @@ struct SandboxContentView: NSViewRepresentable {
 		return sceneView
 	}
 	
-	
-	
-	
 	func updateNSView(_ nsView: SCNView, context: Context) {
 		for node in nsView.scene?.rootNode.childNodes ?? [] {
 			if node.name == "gridNode" {
@@ -79,7 +76,6 @@ struct SandboxContentView: NSViewRepresentable {
 		
 		return scene
 	}
-	
 
 	
 	
