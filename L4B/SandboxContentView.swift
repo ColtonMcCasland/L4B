@@ -30,6 +30,9 @@ struct SandboxContentView: NSViewRepresentable {
 		return sceneView
 	}
 	
+	
+	
+	
 	func updateNSView(_ nsView: SCNView, context: Context) {
 		for node in nsView.scene?.rootNode.childNodes ?? [] {
 			if node.name == "gridNode" {
@@ -43,19 +46,21 @@ struct SandboxContentView: NSViewRepresentable {
 		let gridNode = SCNNode()
 		gridNode.name = "gridNode"
 		scene.rootNode.addChildNode(gridNode)
-		// Create a floor axis grid
+		
+		// Dynamic grid size based on camera position
+		let cameraPositionZ: CGFloat = 10 // Assume this is dynamically updated
 		let gridSize: CGFloat = 1
-		let gridLines = 10
+		let gridLines = Int(cameraPositionZ * 2 / gridSize)
 		let halfSize = gridSize * CGFloat(gridLines) / 2.0
 		
 		for i in (-gridLines / 2) + 1..<gridLines / 2 {
 			let horizontalLine = SCNNode(geometry: createLine(from: SCNVector3(-halfSize, 0, CGFloat(i) * gridSize),
 																			  to: SCNVector3(halfSize, 0, CGFloat(i) * gridSize)))
-			gridNode.addChildNode(horizontalLine) // Add to the parent grid node
+			gridNode.addChildNode(horizontalLine)
 			
 			let verticalLine = SCNNode(geometry: createLine(from: SCNVector3(CGFloat(i) * gridSize, 0, -halfSize),
 																			to: SCNVector3(CGFloat(i) * gridSize, 0, halfSize)))
-			gridNode.addChildNode(verticalLine) // Add to the parent grid node
+			gridNode.addChildNode(verticalLine)
 		}
 		
 		// Add camera
@@ -74,6 +79,7 @@ struct SandboxContentView: NSViewRepresentable {
 		
 		return scene
 	}
+	
 
 	
 	
