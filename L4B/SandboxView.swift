@@ -11,8 +11,7 @@ struct SandboxView: View {
 		ZStack {
 			SandboxContentView(rotationState: rotationState) // Pass both states here
 			VStack {
-				FrostedGlassMenu()
-					.frame(height: 70)
+				
 				HStack {
 					Spacer()
 					CubeControllerView(rotationState: rotationState)

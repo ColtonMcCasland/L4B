@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A29FC0E2A9A4CA400B6FE88 /* FrostedGlassMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A29FC0D2A9A4CA400B6FE88 /* FrostedGlassMenu.swift */; };
+		9A29FC102A9A4CB000B6FE88 /* MenuOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A29FC0F2A9A4CB000B6FE88 /* MenuOptions.swift */; };
 		9A554ED92A90FBA20034BD05 /* L4BApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554ED82A90FBA20034BD05 /* L4BApp.swift */; };
 		9A554EDD2A90FBA30034BD05 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A554EDC2A90FBA30034BD05 /* Assets.xcassets */; };
 		9A554EE02A90FBA30034BD05 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A554EDF2A90FBA30034BD05 /* Preview Assets.xcassets */; };
@@ -40,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9A29FC0D2A9A4CA400B6FE88 /* FrostedGlassMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrostedGlassMenu.swift; sourceTree = "<group>"; };
+		9A29FC0F2A9A4CB000B6FE88 /* MenuOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuOptions.swift; sourceTree = "<group>"; };
 		9A554ED52A90FBA20034BD05 /* L4B.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = L4B.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A554ED82A90FBA20034BD05 /* L4BApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L4BApp.swift; sourceTree = "<group>"; };
 		9A554EDC2A90FBA30034BD05 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 		9A554ED72A90FBA20034BD05 /* L4B */ = {
 			isa = PBXGroup;
 			children = (
+				9A29FC0F2A9A4CB000B6FE88 /* MenuOptions.swift */,
+				9A29FC0D2A9A4CA400B6FE88 /* FrostedGlassMenu.swift */,
 				9A554EE32A90FBA30034BD05 /* L4B.xcdatamodeld */,
 				9A554EE62A90FBA30034BD05 /* L4B.entitlements */,
 				9A554ED82A90FBA20034BD05 /* L4BApp.swift */,
@@ -279,10 +285,12 @@
 			files = (
 				9A554EE22A90FBA30034BD05 /* Persistence.swift in Sources */,
 				9A554EE52A90FBA30034BD05 /* L4B.xcdatamodeld in Sources */,
+				9A29FC0E2A9A4CA400B6FE88 /* FrostedGlassMenu.swift in Sources */,
 				9AD30A9C2A93DF6F00B186E0 /* PositionState.swift in Sources */,
 				9A8827582A91A74F00CA1B27 /* SandboxView.swift in Sources */,
 				9AD30A962A9302DB00B186E0 /* CubeControllerView.swift in Sources */,
 				9AD30AA02A93E9FE00B186E0 /* SandboxContentView.swift in Sources */,
+				9A29FC102A9A4CB000B6FE88 /* MenuOptions.swift in Sources */,
 				9A554ED92A90FBA20034BD05 /* L4BApp.swift in Sources */,
 				9AD30A9A2A93DF6600B186E0 /* RotationState.swift in Sources */,
 			);
