@@ -6,18 +6,20 @@ import SceneKit
 struct FrostedGlassMenu: NSViewRepresentable {
 	func makeNSView(context: Context) -> NSVisualEffectView {
 		let view = NSVisualEffectView()
-		view.blendingMode = .withinWindow
-		view.material = .underWindowBackground
+		
+		// Use the .fullScreenUI appearance to emulate an iOS frosted glass style
+		view.material = .fullScreenUI
+		view.blendingMode = .behindWindow
 		view.state = .active
-		view.wantsLayer = true
-		view.layer?.backgroundColor = NSColor.white.withAlphaComponent(0.7).cgColor // Slightly transparent
 		
 		// Apply corner radius only to the top corners
+		view.wantsLayer = true
 		view.layer?.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-		view.layer?.cornerRadius = 20 // Adjust the radius as needed
+		view.layer?.cornerRadius = 20
 		
 		return view
 	}
+	
 	
 	func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
 		// Update view if needed

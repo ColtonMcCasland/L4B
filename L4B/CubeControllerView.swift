@@ -12,12 +12,23 @@ import SceneKit
 struct CubeControllerView: NSViewRepresentable {
 	@ObservedObject var rotationState: RotationState
 	
+	func updateNSView(_ nsView: SCNView, context: Context) {
+		if let cubeNode = nsView.scene?.rootNode.childNode(withName: "cubeNode", recursively: false) {
+			// Apply the camera's rotation to the cube
+			cubeNode.eulerAngles = rotationState.rotation
+			
+			// Apply additional rotation to align the grid with the bottom face of the cube
+			// (You may need to adjust this rotation based on your specific scene setup)
+			cubeNode.eulerAngles.x += CGFloat.pi / 2
+		}
+	}
+	
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.clear
 		sceneView.scene = SCNScene()
 		sceneView.allowsCameraControl = false
-		
+
 		// Create the grid-like material for the cube
 		let gridMaterial = SCNMaterial()
 		gridMaterial.diffuse.contents = NSColor.white
@@ -130,16 +141,7 @@ struct CubeControllerView: NSViewRepresentable {
 		return material
 	}
 	
-	func updateNSView(_ nsView: SCNView, context: Context) {
-		if let cubeNode = nsView.scene?.rootNode.childNode(withName: "cubeNode", recursively: false) {
-			// Apply the grid's rotation to the cube
-			cubeNode.eulerAngles = rotationState.rotation
-			
-			// Apply additional rotation to align the grid with the bottom face of the cube
-			// (You may need to adjust this rotation based on your specific scene setup)
-			cubeNode.eulerAngles.x += CGFloat.pi / 2
-		}
-	}
+	
 	
 	class Coordinator: NSObject {
 		@ObservedObject var rotationState: RotationState

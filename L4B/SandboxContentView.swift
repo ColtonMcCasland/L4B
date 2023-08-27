@@ -60,19 +60,6 @@ struct SandboxContentView: NSViewRepresentable {
 			gridNode.addChildNode(verticalLine)
 		}
 		
-		// Add camera
-		let cameraNode = SCNNode()
-		cameraNode.name = "cameraNode" // Assign a name here
-		
-		let camera = SCNCamera()
-		camera.fieldOfView = 60 // Adjust the field of view to make sure the edges are visible
-		
-		// Position the camera slightly further away from the grid and adjust its angle
-		let cameraPosition = SCNVector3(x: 0, y: 0, z: halfSize * 2.5) // Adjust the z value for a more zoomed-out view
-		cameraNode.position = cameraPosition
-		
-		cameraNode.camera = camera
-		scene.rootNode.addChildNode(cameraNode)
 		
 		return scene
 	}
