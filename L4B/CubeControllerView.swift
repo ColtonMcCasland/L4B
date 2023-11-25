@@ -244,12 +244,15 @@ struct CubeControllerView: NSViewRepresentable {
 			
 			if let hitResult = hitResults.first, hitResult.node.name == "cubeNode" {
 				let tappedFace = determineTappedFace(from: hitResult)
+				print(tappedFace)
 				animateCamera(to: tappedFace, in: sceneView)
 			}
 		}
 		
 		func animateCamera(to face: CubeFace, in sceneView: SCNView) {
 			guard let cameraNode = sceneView.scene?.rootNode.childNode(withName: "cameraNode", recursively: true) else { return }
+			
+			print(face)
 			
 			let newPosition: SCNVector3
 			let newOrientation: SCNQuaternion
@@ -294,9 +297,6 @@ struct CubeControllerView: NSViewRepresentable {
 			
 			SCNTransaction.commit()
 		}
-
-
-
 		
 		func determineTappedFace(from hitResult: SCNHitTestResult) -> CubeFace {
 			let hitNormal = hitResult.localNormal
@@ -310,56 +310,19 @@ struct CubeControllerView: NSViewRepresentable {
 			} else if hitNormal.x < -0.9 {
 				return .left
 			} else if hitNormal.y > 0.9 {
-				return .front
-			} else if hitNormal.y < -0.9 {
-				return .back
-			} else if hitNormal.z > 0.9 {
-				return .bottom
-			} else if hitNormal.z < -0.9 {
 				return .top
+			} else if hitNormal.y < -0.9 {
+				return .bottom
+			} else if hitNormal.z > 0.9 {
+				return .front
+			} else if hitNormal.z < -0.9 {
+				return .back
 			} else {
 				// Default case if the face cannot be determined
 				return .front
 			}
 		}
-		
-//		func animateCamera(to face: CubeFace, in sceneView: SCNView) {
-//			guard let cameraNode = sceneView.scene?.rootNode.childNode(withName: "cameraNode", recursively: true) else { return }
-//			
-//			let newPosition: SCNVector3
-//			let newOrientation: SCNQuaternion
-//			let distance: Float = 5 // Distance from the cube, adjust as needed
-//			
-//			switch face {
-//				case .front:
-//					newPosition = SCNVector3(0, 0, distance)
-//					newOrientation = SCNQuaternion(0, 0, 0, 1) // Facing front
-//				case .back:
-//					newPosition = SCNVector3(0, 0, -distance)
-//					newOrientation = SCNQuaternion(0, 1, 0, .pi) // Facing back
-//				case .left:
-//					newPosition = SCNVector3(-distance, 0, 0)
-//					newOrientation = SCNQuaternion(0, 1, 0, .pi / 2) // Facing left
-//				case .right:
-//					newPosition = SCNVector3(distance, 0, 0)
-//					newOrientation = SCNQuaternion(0, 1, 0, -.pi / 2) // Facing right
-//				case .top:
-//					newPosition = SCNVector3(0, distance, 0)
-//					newOrientation = SCNQuaternion(1, 0, 0, -.pi / 2) // Facing top
-//				case .bottom:
-//					newPosition = SCNVector3(0, -distance, 0)
-//					newOrientation = SCNQuaternion(1, 0, 0, .pi / 2) // Facing bottom
-//			}
-//			
-//			// Animate the camera movement
-//			SCNTransaction.begin()
-//			SCNTransaction.animationDuration = 1.0 // Adjust the duration as needed
-//			
-//			cameraNode.position = newPosition
-//			cameraNode.orientation = newOrientation
-//			
-//			SCNTransaction.commit()
-//		}
+	
 
 		
 		@objc func handlePanGesture(_ gestureRecognizer: NSPanGestureRecognizer) {
