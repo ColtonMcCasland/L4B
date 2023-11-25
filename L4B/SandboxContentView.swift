@@ -10,6 +10,16 @@ struct SandboxContentView: NSViewRepresentable {
 		sceneView.scene = createScene()
 		sceneView.allowsCameraControl = true
 		
+		// Set the initial camera position for an isometric view
+		let cameraNode = SCNNode()
+		cameraNode.camera = SCNCamera()
+		let cameraDistance: CGFloat = 20 // Adjust the camera distance as needed
+		
+		// Set the camera orientation to look at the center of the scene
+		cameraNode.position = SCNVector3(x: -20, y: 20, z: cameraDistance)
+		cameraNode.eulerAngles = SCNVector3(x: -CGFloat.pi / 4, y:  -CGFloat.pi / 4, z: 0)
+		sceneView.pointOfView = cameraNode
+		
 		// Add pan gesture recognizer
 		let panGesture = NSPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePanGesture(_:)))
 		sceneView.addGestureRecognizer(panGesture)
@@ -20,6 +30,7 @@ struct SandboxContentView: NSViewRepresentable {
 		
 		return sceneView
 	}
+
 	
 	func updateNSView(_ nsView: SCNView, context: Context) {
 		for node in nsView.scene?.rootNode.childNodes ?? [] {
@@ -36,11 +47,15 @@ struct SandboxContentView: NSViewRepresentable {
 		scene.rootNode.addChildNode(gridNode)
 		
 		// Dynamic grid size based on camera position
-		let cameraPositionZ: CGFloat = 10 // Assume this is dynamically updated
+		let gridQuadrentSize: CGFloat = 10 // Assume this is dynamically updated
+		//	Max: 50
+		// Min: ?
+		
+		
 		let gridSize: CGFloat = 1
 		
 		// Calculate the number of grid lines based on camera position
-		let gridLines = Int(cameraPositionZ / gridSize)
+		let gridLines = Int(gridQuadrentSize / gridSize)
 		
 		// Create the grid
 		for i in -gridLines...gridLines {

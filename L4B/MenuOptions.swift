@@ -12,7 +12,7 @@ struct MenuOptions: View {
 				VStack {
 					
 
-					Button("Line") {
+					Button("Line / ") {
 						// Handle drawing shapes
 					}
 					Spacer()

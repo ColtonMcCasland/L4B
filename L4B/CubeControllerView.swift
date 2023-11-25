@@ -19,7 +19,10 @@ struct CubeControllerView: NSViewRepresentable {
 			
 			// Apply additional rotation to align the grid with the bottom face of the cube
 			// (You may need to adjust this rotation based on your specific scene setup)
-			cubeNode.eulerAngles.x += CGFloat.pi / 2
+			cubeNode.eulerAngles.x += CGFloat.pi / 4
+			cubeNode.eulerAngles.y += CGFloat.pi / 4
+
+			
 		}
 	}
 	
@@ -40,6 +43,7 @@ struct CubeControllerView: NSViewRepresentable {
 		// Create the cube node
 		let cube = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
 		let cubeNode = SCNNode(geometry: cube)
+		
 		
 		// Create a material for the lines of the grid
 		let lineMaterial = SCNMaterial()
