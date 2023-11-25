@@ -37,20 +37,75 @@ struct CubeControllerView: NSViewRepresentable {
 		gridMaterial.diffuse.wrapT = .repeat
 		gridMaterial.diffuse.contentsTransform = SCNMatrix4MakeScale(3.0, 3.0, 1.0) // Adjust the scale
 		
+		// Create the cube node
 		let cube = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
+		let cubeNode = SCNNode(geometry: cube)
 		
-		// Create a white material for the faces
-		let faceMaterial = SCNMaterial()
-		faceMaterial.diffuse.contents = NSColor.white
+		// Create a material for the lines of the grid
+		let lineMaterial = SCNMaterial()
+		lineMaterial.diffuse.contents = NSColor.black // Lines color
+		
+		// Calculate the number of lines based on the desired grid size
+		let gridSize = 3
+		let lineSpacing = Float(2) / Float(gridSize) // Assuming cube width is 2
+		
+		// Generate grid lines for each face of the cube
+		for i in 0...gridSize {
+			let position = Float(i) * lineSpacing - 1 // Position of the line
+			
+			// Horizontal lines along Z
+			for z in [-1, 1].map(Float.init) {
+				let start = SCNVector3(-1, position, z)
+				let end = SCNVector3(1, position, z)
+				let lineNode = lineBetweenPoints(start: start, end: end, material: lineMaterial)
+				cubeNode.addChildNode(lineNode)
+			}
+			
+			// Vertical lines along Z
+			for z in [-1, 1].map(Float.init) {
+				let start = SCNVector3(position, -1, z)
+				let end = SCNVector3(position, 1, z)
+				let lineNode = lineBetweenPoints(start: start, end: end, material: lineMaterial)
+				cubeNode.addChildNode(lineNode)
+			}
+			
+			// Horizontal lines along X
+			for x in [-1, 1].map(Float.init) {
+				let start = SCNVector3(x, position, -1)
+				let end = SCNVector3(x, position, 1)
+				let lineNode = lineBetweenPoints(start: start, end: end, material: lineMaterial)
+				cubeNode.addChildNode(lineNode)
+			}
+			
+			// Vertical lines along X
+			for x in [-1, 1].map(Float.init) {
+				let start = SCNVector3(x, -1, position)
+				let end = SCNVector3(x, 1, position)
+				let lineNode = lineBetweenPoints(start: start, end: end, material: lineMaterial)
+				cubeNode.addChildNode(lineNode)
+			}
+			
+			// Horizontal and Vertical lines for Front and Back faces (along YZ plane)
+			for y in [-1, 1].map(Float.init) {
+				// Horizontal lines on Front and Back
+				let frontStart = SCNVector3(-1, y, position)
+				let frontEnd = SCNVector3(1, y, position)
+				let frontLineNode = lineBetweenPoints(start: frontStart, end: frontEnd, material: lineMaterial)
+				cubeNode.addChildNode(frontLineNode)
+				
+				// Vertical lines on Front and Back
+				let backStart = SCNVector3(position, y, -1)
+				let backEnd = SCNVector3(position, y, 1)
+				let backLineNode = lineBetweenPoints(start: backStart, end: backEnd, material: lineMaterial)
+				cubeNode.addChildNode(backLineNode)
+			}
+		}
 		
 		// Create a gray material for the edges
 		let edgeMaterial = SCNMaterial()
 		edgeMaterial.diffuse.contents = NSColor.gray
+
 		
-		// Set the materials for each face
-		cube.materials = [faceMaterial, faceMaterial, faceMaterial, faceMaterial, faceMaterial, faceMaterial]
-		
-		let cubeNode = SCNNode(geometry: cube)
 		cubeNode.name = "cubeNode"
 		sceneView.scene?.rootNode.addChildNode(cubeNode)
 		
@@ -102,6 +157,16 @@ struct CubeControllerView: NSViewRepresentable {
 		sceneView.addGestureRecognizer(panGesture)
 		
 		return sceneView
+	}
+	
+	// Function to create a line between two points
+	func lineBetweenPoints(start: SCNVector3, end: SCNVector3, material: SCNMaterial) -> SCNNode {
+		let indices: [Int32] = [0, 1]
+		let source = SCNGeometrySource(vertices: [start, end])
+		let element = SCNGeometryElement(indices: indices, primitiveType: .line)
+		let lineGeometry = SCNGeometry(sources: [source], elements: [element])
+		lineGeometry.materials = [material]
+		return SCNNode(geometry: lineGeometry)
 	}
 	
 	func addText(_ text: String, to node: SCNNode, at position: SCNVector3, rotation: SCNVector4) {
