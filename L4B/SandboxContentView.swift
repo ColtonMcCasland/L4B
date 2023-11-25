@@ -13,11 +13,11 @@ struct SandboxContentView: NSViewRepresentable {
 		// Set the initial camera position for an isometric view
 		let cameraNode = SCNNode()
 		cameraNode.camera = SCNCamera()
-		let cameraDistance: CGFloat = 20 // Adjust the camera distance as needed
+		let cameraDistance: CGFloat = 30 // Adjust the camera distance as needed
 		
 		// Set the camera orientation to look at the center of the scene
-		cameraNode.position = SCNVector3(x: -20, y: 20, z: cameraDistance)
-		cameraNode.eulerAngles = SCNVector3(x: -CGFloat.pi / 4, y:  -CGFloat.pi / 4, z: 0)
+		cameraNode.position = SCNVector3(x: 0, y: 0, z: cameraDistance)
+		cameraNode.eulerAngles = SCNVector3(x: 0, y:  0, z: 0)
 		sceneView.pointOfView = cameraNode
 		
 		// Add pan gesture recognizer
