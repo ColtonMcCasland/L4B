@@ -156,8 +156,14 @@ struct CubeControllerView: NSViewRepresentable {
 		let panGesture = NSPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePanGesture(_:)))
 		sceneView.addGestureRecognizer(panGesture)
 		
+		// Add tap gesture recognizer
+		let tapGesture = NSClickGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTapGesture(_:)))
+		sceneView.addGestureRecognizer(tapGesture)
+
+		
 		return sceneView
 	}
+	
 	
 	// Function to create a line between two points
 	func lineBetweenPoints(start: SCNVector3, end: SCNVector3, material: SCNMaterial) -> SCNNode {
@@ -215,6 +221,92 @@ struct CubeControllerView: NSViewRepresentable {
 			self.rotationState = rotationState
 			super.init()
 		}
+		
+		enum CubeFace {
+			case front
+			case back
+			case left
+			case right
+			case top
+			case bottom
+			case test
+		}
+		
+		@objc func handleTapGesture(_ gestureRecognizer: NSClickGestureRecognizer) {
+			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
+			
+			let location = gestureRecognizer.location(in: sceneView)
+			let hitResults = sceneView.hitTest(location, options: [:])
+			
+			if let hitResult = hitResults.first, hitResult.node.name == "cubeNode" {
+				let tappedFace = determineTappedFace(from: hitResult)
+//				animateCamera(to: tappedFace, in: sceneView)
+			}
+		}
+		
+		func determineTappedFace(from hitResult: SCNHitTestResult) -> CubeFace {
+			let hitNormal = hitResult.localNormal
+			
+			// Debugging: Print hit normal
+			print("Hit Normal: \(hitNormal)")
+			
+			// Determine the face based on the normal vector of the hit result
+			if hitNormal.x > 0.9 {
+				return .right
+			} else if hitNormal.x < -0.9 {
+				return .left
+			} else if hitNormal.y > 0.9 {
+				return .front
+			} else if hitNormal.y < -0.9 {
+				return .back
+			} else if hitNormal.z > 0.9 {
+				return .bottom
+			} else if hitNormal.z < -0.9 {
+				return .top
+			} else {
+				// Default case if the face cannot be determined
+				return .front
+			}
+		}
+		
+//		func animateCamera(to face: CubeFace, in sceneView: SCNView) {
+//			guard let cameraNode = sceneView.scene?.rootNode.childNode(withName: "cameraNode", recursively: true) else { return }
+//			
+//			let newPosition: SCNVector3
+//			let newOrientation: SCNQuaternion
+//			let distance: Float = 5 // Distance from the cube, adjust as needed
+//			
+//			switch face {
+//				case .front:
+//					newPosition = SCNVector3(0, 0, distance)
+//					newOrientation = SCNQuaternion(0, 0, 0, 1) // Facing front
+//				case .back:
+//					newPosition = SCNVector3(0, 0, -distance)
+//					newOrientation = SCNQuaternion(0, 1, 0, .pi) // Facing back
+//				case .left:
+//					newPosition = SCNVector3(-distance, 0, 0)
+//					newOrientation = SCNQuaternion(0, 1, 0, .pi / 2) // Facing left
+//				case .right:
+//					newPosition = SCNVector3(distance, 0, 0)
+//					newOrientation = SCNQuaternion(0, 1, 0, -.pi / 2) // Facing right
+//				case .top:
+//					newPosition = SCNVector3(0, distance, 0)
+//					newOrientation = SCNQuaternion(1, 0, 0, -.pi / 2) // Facing top
+//				case .bottom:
+//					newPosition = SCNVector3(0, -distance, 0)
+//					newOrientation = SCNQuaternion(1, 0, 0, .pi / 2) // Facing bottom
+//			}
+//			
+//			// Animate the camera movement
+//			SCNTransaction.begin()
+//			SCNTransaction.animationDuration = 1.0 // Adjust the duration as needed
+//			
+//			cameraNode.position = newPosition
+//			cameraNode.orientation = newOrientation
+//			
+//			SCNTransaction.commit()
+//		}
+
 		
 		@objc func handlePanGesture(_ gestureRecognizer: NSPanGestureRecognizer) {
 			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
