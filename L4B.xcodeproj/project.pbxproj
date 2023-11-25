@@ -118,12 +118,12 @@
 				9AD30A9F2A93E9FE00B186E0 /* SandboxContentView.swift */,
 				9AD30A952A9302DB00B186E0 /* CubeControllerView.swift */,
 				9A554EE12A90FBA30034BD05 /* Persistence.swift */,
+				9AD30A992A93DF6600B186E0 /* RotationState.swift */,
+				9AD30A9B2A93DF6F00B186E0 /* PositionState.swift */,
+				9A554EDE2A90FBA30034BD05 /* Preview Content */,
 				9A554EDC2A90FBA30034BD05 /* Assets.xcassets */,
 				9A554EE32A90FBA30034BD05 /* L4B.xcdatamodeld */,
 				9A554EE62A90FBA30034BD05 /* L4B.entitlements */,
-				9A554EDE2A90FBA30034BD05 /* Preview Content */,
-				9AD30A992A93DF6600B186E0 /* RotationState.swift */,
-				9AD30A9B2A93DF6F00B186E0 /* PositionState.swift */,
 			);
 			path = L4B;
 			sourceTree = "<group>";
