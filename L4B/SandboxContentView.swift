@@ -1,13 +1,5 @@
-//
-//  SandboxContentView.swift
-//  L4B
-//
-//  Created by Colton McCasland on 8/21/23.
-//
-
 import SwiftUI
 import SceneKit
-
 
 struct SandboxContentView: NSViewRepresentable {
 	@ObservedObject var rotationState: RotationState
@@ -25,8 +17,7 @@ struct SandboxContentView: NSViewRepresentable {
 		// Add rotation gesture recognizer for two-finger twisting
 		let rotationGesture = NSRotationGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleRotationGesture(_:)))
 		sceneView.addGestureRecognizer(rotationGesture)
-
-
+		
 		return sceneView
 	}
 	
@@ -47,24 +38,25 @@ struct SandboxContentView: NSViewRepresentable {
 		// Dynamic grid size based on camera position
 		let cameraPositionZ: CGFloat = 10 // Assume this is dynamically updated
 		let gridSize: CGFloat = 1
-		let gridLines = Int(cameraPositionZ * 2 / gridSize)
-		let halfSize = gridSize * CGFloat(gridLines) / 2.0
 		
-		for i in (-gridLines / 2) + 1..<gridLines / 2 {
-			let horizontalLine = SCNNode(geometry: createLine(from: SCNVector3(-halfSize, 0, CGFloat(i) * gridSize),
-																			  to: SCNVector3(halfSize, 0, CGFloat(i) * gridSize)))
-			gridNode.addChildNode(horizontalLine)
-			
-			let verticalLine = SCNNode(geometry: createLine(from: SCNVector3(CGFloat(i) * gridSize, 0, -halfSize),
-																			to: SCNVector3(CGFloat(i) * gridSize, 0, halfSize)))
-			gridNode.addChildNode(verticalLine)
+		// Calculate the number of grid lines based on camera position
+		let gridLines = Int(cameraPositionZ / gridSize)
+		
+		// Create the grid
+		for i in -gridLines...gridLines {
+			for j in -gridLines...gridLines {
+				let horizontalLine = SCNNode(geometry: createLine(from: SCNVector3(-gridSize * CGFloat(gridLines), 0, CGFloat(i) * gridSize),
+																				  to: SCNVector3(gridSize * CGFloat(gridLines), 0, CGFloat(i) * gridSize)))
+				gridNode.addChildNode(horizontalLine)
+				
+				let verticalLine = SCNNode(geometry: createLine(from: SCNVector3(CGFloat(j) * gridSize, 0, -gridSize * CGFloat(gridLines)),
+																				to: SCNVector3(CGFloat(j) * gridSize, 0, gridSize * CGFloat(gridLines))))
+				gridNode.addChildNode(verticalLine)
+			}
 		}
-		
 		
 		return scene
 	}
-
-	
 	
 	func degreesToRadians(_ degrees: Int) -> CGFloat {
 		return CGFloat(degrees) * .pi / 180
@@ -85,8 +77,6 @@ struct SandboxContentView: NSViewRepresentable {
 		
 		return geometry
 	}
-
-	
 	
 	func makeCoordinator() -> Coordinator {
 		Coordinator(rotationState: rotationState)
