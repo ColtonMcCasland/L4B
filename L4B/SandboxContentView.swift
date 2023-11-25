@@ -11,6 +11,11 @@ struct SandboxContentView: NSViewRepresentable {
 		sceneView.scene = createScene()
 		sceneView.allowsCameraControl = true
 		
+		// Set up the tap gesture recognizer
+		let tapGesture = NSClickGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTapGesture(_:)))
+		sceneView.addGestureRecognizer(tapGesture)
+		
+		
 		// Set the initial camera position for an isometric view
 		let cameraNode = SCNNode()
 		cameraNode.camera = SCNCamera()
@@ -103,14 +108,16 @@ struct SandboxContentView: NSViewRepresentable {
 	}
 	
 	func makeCoordinator() -> Coordinator {
-		Coordinator(rotationState: rotationState)
+		Coordinator(rotationState: rotationState, cameraControl: cameraControl)
 	}
 	
 	class Coordinator: NSObject {
 		@ObservedObject var rotationState: RotationState
+		@ObservedObject var cameraControl: CameraControl
 		
-		init(rotationState: RotationState) {
+		init(rotationState: RotationState, cameraControl: CameraControl) {
 			self.rotationState = rotationState
+			self.cameraControl = cameraControl
 			super.init()
 		}
 		
@@ -139,5 +146,26 @@ struct SandboxContentView: NSViewRepresentable {
 			// Reset the rotation for continuous twisting
 			gestureRecognizer.rotation = 0
 		}
+		
+		@objc func handleTapGesture(_ gestureRecognizer: NSClickGestureRecognizer) {
+			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
+			
+			print("tap")
+			
+			let location = gestureRecognizer.location(in: sceneView)
+			let hitResults = sceneView.hitTest(location, options: [:])
+			
+			if let firstHit = hitResults.first {
+				let tappedNode = firstHit.node
+				if tappedNode.name == "cubeFace" {
+					// Calculate the new camera position based on the tapped cube face
+					let newPosition = tappedNode.worldPosition
+					print("Tapped cube face at \(newPosition)")
+					cameraControl.targetPosition = newPosition
+				}
+			}
+		}
+
+
 	}
 }

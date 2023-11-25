@@ -13,9 +13,15 @@ struct L4BApp: App {
 	
 	var body: some Scene {
 		WindowGroup {
-			SandboxView()
-				.frame(minWidth: 700, minHeight: 700) // Set the minimum size here
+			// Create the required objects
+			let rotationState = RotationState()
+			let cameraControl = CameraControl()
+			
+			// Pass them to SandboxView
+			SandboxView(rotationState: rotationState, cameraControl: cameraControl)
+				.frame(minWidth: 700, minHeight: 700)
 				.environment(\.managedObjectContext, persistenceController.container.viewContext)
 		}
 	}
 }
+

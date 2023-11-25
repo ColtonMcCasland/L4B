@@ -238,6 +238,7 @@ struct CubeControllerView: NSViewRepresentable {
 		
 		@objc func handleTapGesture(_ gestureRecognizer: NSClickGestureRecognizer) {
 			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
+			print("Tap gesture recognized")
 			
 			let location = gestureRecognizer.location(in: sceneView)
 			let hitResults = sceneView.hitTest(location, options: [:])
@@ -245,64 +246,54 @@ struct CubeControllerView: NSViewRepresentable {
 			if let hitResult = hitResults.first, hitResult.node.name == "cubeNode" {
 				let tappedFace = determineTappedFace(from: hitResult)
 				print(tappedFace)
-				animateCamera(to: tappedFace, in: sceneView)
+				adjustCamera(to: tappedFace, in: sceneView)
 			}
 		}
 		
-		func animateCamera(to face: CubeFace, in sceneView: SCNView) {
+		func adjustCamera(to face: CubeFace, in sceneView: SCNView) {
 			guard let cameraNode = sceneView.scene?.rootNode.childNode(withName: "cameraNode", recursively: true) else { return }
 			
-			print(face)
-			
 			let newPosition: SCNVector3
-			let newOrientation: SCNQuaternion
-			let distance: Float = 5 // Distance from the cube, adjust as needed
+			let distance: Float = 10 // Distance from the cube face
 			
-			// Define new camera position and orientation based on the tapped face
 			switch face {
 				case .front:
 					newPosition = SCNVector3(0, 0, distance)
-					newOrientation = SCNQuaternion(x: 0, y: 0, z: 0, w: 1) // Facing front
 				case .back:
 					newPosition = SCNVector3(0, 0, -distance)
-					newOrientation = SCNQuaternion(x: 0, y: 1, z: 0, w: -1) // Facing back
 				case .left:
 					newPosition = SCNVector3(-distance, 0, 0)
-					newOrientation = SCNQuaternion(x: 0, y: 1, z: 0, w: CGFloat(Float.pi) / 2) // Facing left
 				case .right:
 					newPosition = SCNVector3(distance, 0, 0)
-					newOrientation = SCNQuaternion(x: 0, y: 1, z: 0, w: CGFloat(-Float.pi) / 2) // Facing right
 				case .top:
 					newPosition = SCNVector3(0, distance, 0)
-					newOrientation = SCNQuaternion(x: 1, y: 0, z: 0, w: -CGFloat(Float.pi) / 2) // Facing top
 				case .bottom:
 					newPosition = SCNVector3(0, -distance, 0)
-					newOrientation = SCNQuaternion(x: 1, y: 0, z: 0, w: CGFloat(Float.pi) / 2) // Facing bottom
 				default:
 					return // If the face is not recognized, do not change the camera
 			}
 			
-			// Update the shared CameraControl object
-			DispatchQueue.main.async {
-				self.cameraControl.targetPosition = newPosition
-				self.cameraControl.targetOrientation = newOrientation
-			}
+			// Create a target node at the center of the cube and apply a lookAt constraint
+			let targetNode = SCNNode()
+			targetNode.position = SCNVector3(0, 0, 0) // Center of the cube
+			let lookAtConstraint = SCNLookAtConstraint(target: targetNode)
+			cameraNode.constraints = [lookAtConstraint]
 			
 			// Animate the camera movement
 			SCNTransaction.begin()
-			SCNTransaction.animationDuration = 1.0 // Adjust the duration as needed
-			
+			SCNTransaction.animationDuration = 1.0
 			cameraNode.position = newPosition
-			cameraNode.orientation = newOrientation
-			
 			SCNTransaction.commit()
 		}
+
+
+
 		
 		func determineTappedFace(from hitResult: SCNHitTestResult) -> CubeFace {
 			let hitNormal = hitResult.localNormal
 			
 			// Debugging: Print hit normal
-			print("Hit Normal: \(hitNormal)")
+			// print("Hit Normal: \(hitNormal)")
 			
 			// Determine the face based on the normal vector of the hit result
 			if hitNormal.x > 0.9 {
@@ -337,6 +328,7 @@ struct CubeControllerView: NSViewRepresentable {
 			
 			gestureRecognizer.setTranslation(.zero, in: sceneView)
 		}
+		
 	}
 	
 	func makeCoordinator() -> Coordinator {
