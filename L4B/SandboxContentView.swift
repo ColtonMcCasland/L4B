@@ -3,7 +3,8 @@ import SceneKit
 
 struct SandboxContentView: NSViewRepresentable {
 	@ObservedObject var rotationState: RotationState
-	
+	@ObservedObject var cameraControl: CameraControl  // Make sure to pass this
+
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.white
@@ -37,6 +38,14 @@ struct SandboxContentView: NSViewRepresentable {
 			if node.name == "gridNode" {
 				node.eulerAngles = rotationState.rotation
 			}
+		}
+		
+		// Update camera based on CameraControl
+		if let newPosition = cameraControl.targetPosition {
+			nsView.pointOfView?.position = newPosition
+		}
+		if let newOrientation = cameraControl.targetOrientation {
+			nsView.pointOfView?.orientation = newOrientation
 		}
 	}
 	
