@@ -8,7 +8,7 @@ struct SandboxContentView: NSViewRepresentable {
 	func makeNSView(context: Context) -> SCNView {
 		let sceneView = SCNView()
 		sceneView.backgroundColor = NSColor.white
-		sceneView.scene = createScene()
+		sceneView.scene = createGrid()
 		sceneView.allowsCameraControl = true
 		
 		// Set up the tap gesture recognizer
@@ -54,7 +54,7 @@ struct SandboxContentView: NSViewRepresentable {
 		}
 	}
 	
-	func createScene() -> SCNScene {
+	func createGrid() -> SCNScene {
 		let scene = SCNScene()
 		let gridNode = SCNNode()
 		gridNode.name = "gridNode"
