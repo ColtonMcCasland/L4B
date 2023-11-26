@@ -28,8 +28,6 @@ struct SandboxView: View {
 							.padding(.top, 10)
 							.padding(.trailing, 10)
 						
-					
-						
 						HStack {
 							Button(action: {
 								// Reset the camera's rotation to the initial position
@@ -43,23 +41,13 @@ struct SandboxView: View {
 									.cornerRadius(16)
 									.foregroundColor(Color.gray)
 							}
-							
-							
 						}
-						
-						
-						
-						Spacer()
-
 					}
-					
-					
 				}
 				.cornerRadius(16) // Adjust the corner radius value as needed
-				
+
 				Spacer()
 			}
 		}
 	}
-
 }
