@@ -13,6 +13,8 @@ struct CubeControllerView: NSViewRepresentable {
 	@ObservedObject var rotationState: RotationState
 	@ObservedObject var cameraControl: CameraControl
 	
+	
+	
 	func updateNSView(_ nsView: SCNView, context: Context) {
 		if let scene = nsView.scene {
 			let cubeNode = scene.rootNode.childNode(withName: "cubeNode", recursively: false)

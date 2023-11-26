@@ -21,7 +21,6 @@
 		9A9296D42B124A7F008B0CFF /* CameraControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9296D32B124A7F008B0CFF /* CameraControl.swift */; };
 		9AD30A962A9302DB00B186E0 /* CubeControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD30A952A9302DB00B186E0 /* CubeControllerView.swift */; };
 		9AD30A9A2A93DF6600B186E0 /* RotationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD30A992A93DF6600B186E0 /* RotationState.swift */; };
-		9AD30A9C2A93DF6F00B186E0 /* PositionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD30A9B2A93DF6F00B186E0 /* PositionState.swift */; };
 		9AD30AA02A93E9FE00B186E0 /* SandboxContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD30A9F2A93E9FE00B186E0 /* SandboxContentView.swift */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +60,6 @@
 		9A9296D32B124A7F008B0CFF /* CameraControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControl.swift; sourceTree = "<group>"; };
 		9AD30A952A9302DB00B186E0 /* CubeControllerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeControllerView.swift; sourceTree = "<group>"; };
 		9AD30A992A93DF6600B186E0 /* RotationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationState.swift; sourceTree = "<group>"; };
-		9AD30A9B2A93DF6F00B186E0 /* PositionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionState.swift; sourceTree = "<group>"; };
 		9AD30A9F2A93E9FE00B186E0 /* SandboxContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,7 +120,6 @@
 				9A554EE12A90FBA30034BD05 /* Persistence.swift */,
 				9AD30A992A93DF6600B186E0 /* RotationState.swift */,
 				9A9296D32B124A7F008B0CFF /* CameraControl.swift */,
-				9AD30A9B2A93DF6F00B186E0 /* PositionState.swift */,
 				9A554EDE2A90FBA30034BD05 /* Preview Content */,
 				9A554EDC2A90FBA30034BD05 /* Assets.xcassets */,
 				9A554EE32A90FBA30034BD05 /* L4B.xcdatamodeld */,
@@ -290,7 +287,6 @@
 				9A554EE52A90FBA30034BD05 /* L4B.xcdatamodeld in Sources */,
 				9A9296D42B124A7F008B0CFF /* CameraControl.swift in Sources */,
 				9A29FC0E2A9A4CA400B6FE88 /* FrostedGlassMenu.swift in Sources */,
-				9AD30A9C2A93DF6F00B186E0 /* PositionState.swift in Sources */,
 				9A8827582A91A74F00CA1B27 /* SandboxView.swift in Sources */,
 				9AD30A962A9302DB00B186E0 /* CubeControllerView.swift in Sources */,
 				9AD30AA02A93E9FE00B186E0 /* SandboxContentView.swift in Sources */,
