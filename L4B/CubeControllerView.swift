@@ -225,7 +225,7 @@ struct CubeControllerView: NSViewRepresentable {
 			self.rotationState = rotationState
 			self.cameraControl = cameraControl
 		}
-		
+				
 		enum CubeFace {
 			case front
 			case back
@@ -238,53 +238,76 @@ struct CubeControllerView: NSViewRepresentable {
 		
 		@objc func handleTapGesture(_ gestureRecognizer: NSClickGestureRecognizer) {
 			guard let sceneView = gestureRecognizer.view as? SCNView else { return }
-			print("Tap gesture recognized")
-			
 			let location = gestureRecognizer.location(in: sceneView)
 			let hitResults = sceneView.hitTest(location, options: [:])
 			
 			if let hitResult = hitResults.first, hitResult.node.name == "cubeNode" {
 				let tappedFace = determineTappedFace(from: hitResult)
-				print(tappedFace)
-				adjustCamera(to: tappedFace, in: sceneView)
+				adjustCamera(to: tappedFace)
 			}
 		}
 		
-		func adjustCamera(to face: CubeFace, in sceneView: SCNView) {
-			guard let cameraNode = sceneView.scene?.rootNode.childNode(withName: "cameraNode", recursively: true) else { return }
-			
-			let newPosition: SCNVector3
-			let distance: Float = 10 // Distance from the cube face
-			
+		private func adjustCamera(to face: CubeFace) {
 			switch face {
 				case .front:
-					newPosition = SCNVector3(0, 0, distance)
+					adjustCameraToFrontFace()
 				case .back:
-					newPosition = SCNVector3(0, 0, -distance)
+					adjustCameraToBackFace()
 				case .left:
-					newPosition = SCNVector3(-distance, 0, 0)
+					adjustCameraToLeftFace()
 				case .right:
-					newPosition = SCNVector3(distance, 0, 0)
+					adjustCameraToRightFace()
 				case .top:
-					newPosition = SCNVector3(0, distance, 0)
+					adjustCameraToTopFace()
 				case .bottom:
-					newPosition = SCNVector3(0, -distance, 0)
+					adjustCameraToBottomFace()
 				default:
-					return // If the face is not recognized, do not change the camera
+					break
 			}
-			
-			// Create a target node at the center of the cube and apply a lookAt constraint
-			let targetNode = SCNNode()
-			targetNode.position = SCNVector3(0, 0, 0) // Center of the cube
-			let lookAtConstraint = SCNLookAtConstraint(target: targetNode)
-			cameraNode.constraints = [lookAtConstraint]
-			
-			// Animate the camera movement
-			SCNTransaction.begin()
-			SCNTransaction.animationDuration = 1.0
-			cameraNode.position = newPosition
-			SCNTransaction.commit()
 		}
+		
+		private func adjustCameraToFrontFace() {
+			DispatchQueue.main.async {
+				self.cameraControl.targetPosition = SCNVector3(0, 0, 30)
+				self.rotationState.rotation = SCNVector3(0, 0, 0)
+			}
+		}
+		
+		private func adjustCameraToTopFace() {
+			DispatchQueue.main.async {
+				self.cameraControl.targetPosition = SCNVector3(0, 0, 30) // Above the cube
+				self.rotationState.rotation = SCNVector3(CGFloat.pi / 2, 0, 0) // Looking down
+			}
+		}
+
+		private func adjustCameraToBackFace() {
+			DispatchQueue.main.async {
+				self.cameraControl.targetPosition = SCNVector3(0, 0, 30) // Opposite the front
+				self.rotationState.rotation = SCNVector3(0, CGFloat.pi, 0) // Rotated 180 degrees around Y axis
+			}
+		}
+
+		private func adjustCameraToBottomFace() {
+			DispatchQueue.main.async {
+				self.cameraControl.targetPosition = SCNVector3(0, 0, 30) // Below the cube
+				self.rotationState.rotation = SCNVector3(-CGFloat.pi / 2, 0, 0) // Looking up
+			}
+		}
+
+		private func adjustCameraToLeftFace() {
+			DispatchQueue.main.async {
+				self.cameraControl.targetPosition = SCNVector3(0, 0, 30) // Left side of the cube
+				self.rotationState.rotation = SCNVector3(0, CGFloat.pi / 2, 0) // Rotated 90 degrees to the left
+			}
+		}
+
+		private func adjustCameraToRightFace() {
+			DispatchQueue.main.async {
+				self.cameraControl.targetPosition = SCNVector3(0, 0, 30) // Right side of the cube
+				self.rotationState.rotation = SCNVector3(0, -CGFloat.pi / 2, 0) // Rotated 90 degrees to the right
+			}
+		}
+
 
 
 
@@ -334,6 +357,6 @@ struct CubeControllerView: NSViewRepresentable {
 	func makeCoordinator() -> Coordinator {
 		Coordinator(rotationState: rotationState, cameraControl: cameraControl)
 	}
-
+	
 }
 
