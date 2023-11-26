@@ -26,18 +26,28 @@ struct CubeControllerView: NSViewRepresentable {
 	}
 	
 	func makeNSView(context: Context) -> SCNView {
+	
+		
 		let sceneView = SCNView()
-		sceneView.backgroundColor = NSColor.clear
+		sceneView.backgroundColor = NSColor.lightGray
 		sceneView.scene = SCNScene()
 		sceneView.allowsCameraControl = false
-
+		
+		
 		// Create the grid-like material for the cube
 		let gridMaterial = SCNMaterial()
-		gridMaterial.diffuse.contents = NSColor.white
 		gridMaterial.isDoubleSided = true
-		gridMaterial.diffuse.wrapS = .repeat
-		gridMaterial.diffuse.wrapT = .repeat
-		gridMaterial.diffuse.contentsTransform = SCNMatrix4MakeScale(3.0, 3.0, 1.0) // Adjust the scale
+		gridMaterial.diffuse.contents = NSColor.clear // Set the background color to clear for added transparency
+		
+		// Apply frosted glass appearance with rounded corners
+		gridMaterial.transparencyMode = .dualLayer // Use dualLayer transparency mode
+		gridMaterial.diffuse.intensity = 0.7 // Adjust the intensity for the frosted effect
+		gridMaterial.specular.contents = NSColor.clear // Disable specular reflections
+		
+		// Apply rounded corners to the SCNView
+		sceneView.layer?.cornerRadius = 20
+		sceneView.layer?.masksToBounds = true
+
 		
 		// Create the cube node
 		let cube = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)

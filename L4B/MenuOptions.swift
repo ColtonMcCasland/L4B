@@ -2,24 +2,20 @@ import SwiftUI
 import SceneKit
 
 struct MenuOptions: View {
-	
-
 	var body: some View {
-		HStack {
+		VStack {
+			// Add more Spacer elements to move the arrow down
+			Spacer()
 			Spacer()
 			
-//			VStack {
-//				Spacer()
-//				Button("Front") { onFrontButtonClicked() }
-//				Spacer()
-//				Button("Back") { onBackButtonClicked() }
-//				Spacer()
-//				Button("Left") { onLeftButtonClicked() }
-//				Spacer()
-//			}
-			
-			
-			Spacer()
+			HStack {
+				Spacer()
+				
+				// Add the chevron arrow pointing down
+				Image(systemName: "chevron.down")
+				
+				Spacer()
+			}
 		}
 	}
 }
