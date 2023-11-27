@@ -18,7 +18,6 @@
 		9A554EF02A90FBA40034BD05 /* L4BTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554EEF2A90FBA40034BD05 /* L4BTests.swift */; };
 		9A554EFA2A90FBA40034BD05 /* L4BUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554EF92A90FBA40034BD05 /* L4BUITests.swift */; };
 		9A554EFC2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A554EFB2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift */; };
-		9A5F476F2B140A6B00F5923D /* STLModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5F476E2B140A6B00F5923D /* STLModelManager.swift */; };
 		9A8827582A91A74F00CA1B27 /* SandboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8827572A91A74F00CA1B27 /* SandboxView.swift */; };
 		9AD30A962A9302DB00B186E0 /* CubeControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD30A952A9302DB00B186E0 /* CubeControllerView.swift */; };
 		9AD30AA02A93E9FE00B186E0 /* SandboxContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD30A9F2A93E9FE00B186E0 /* SandboxContentView.swift */; };
@@ -57,7 +56,6 @@
 		9A554EF52A90FBA40034BD05 /* L4BUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = L4BUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A554EF92A90FBA40034BD05 /* L4BUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L4BUITests.swift; sourceTree = "<group>"; };
 		9A554EFB2A90FBA40034BD05 /* L4BUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L4BUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		9A5F476E2B140A6B00F5923D /* STLModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STLModelManager.swift; sourceTree = "<group>"; };
 		9A8827572A91A74F00CA1B27 /* SandboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxView.swift; sourceTree = "<group>"; };
 		9AD30A952A9302DB00B186E0 /* CubeControllerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeControllerView.swift; sourceTree = "<group>"; };
 		9AD30A9F2A93E9FE00B186E0 /* SandboxContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxContentView.swift; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 				9AD30A9F2A93E9FE00B186E0 /* SandboxContentView.swift */,
 				9AD30A952A9302DB00B186E0 /* CubeControllerView.swift */,
 				9A00E4CE2B13D9390076C62E /* Coordinator.swift */,
-				9A5F476E2B140A6B00F5923D /* STLModelManager.swift */,
 				9A29FC0F2A9A4CB000B6FE88 /* MenuOptions.swift */,
 				9A29FC0D2A9A4CA400B6FE88 /* FrostedGlassMenu.swift */,
 				9A554EDE2A90FBA30034BD05 /* Preview Content */,
@@ -285,7 +282,6 @@
 			files = (
 				9A554EE22A90FBA30034BD05 /* Persistence.swift in Sources */,
 				9A554EE52A90FBA30034BD05 /* L4B.xcdatamodeld in Sources */,
-				9A5F476F2B140A6B00F5923D /* STLModelManager.swift in Sources */,
 				9A29FC0E2A9A4CA400B6FE88 /* FrostedGlassMenu.swift in Sources */,
 				9A8827582A91A74F00CA1B27 /* SandboxView.swift in Sources */,
 				9AD30A962A9302DB00B186E0 /* CubeControllerView.swift in Sources */,

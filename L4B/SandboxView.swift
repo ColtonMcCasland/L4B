@@ -40,13 +40,16 @@ struct SandboxView: View {
 									.background(Color.white)
 									.cornerRadius(16)
 									.foregroundColor(Color.gray)
+								
 							}
 						}
+						Spacer()
 					}
 				}
 				.cornerRadius(16) // Adjust the corner radius value as needed
 
 				Spacer()
+				
 			}
 		}
 	}
