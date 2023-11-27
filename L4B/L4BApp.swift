@@ -18,16 +18,9 @@ struct L4BApp: App {
 			let cameraControl = CameraControl()
 
 			
-//			Old grid
-//			// Pass them to SandboxView
 			SandboxView(rotationState: rotationState, cameraControl: cameraControl)
 				.frame(minWidth: 700, minHeight: 700)
 				.environment(\.managedObjectContext, persistenceController.container.viewContext)
-
-			
-			
-			
-			
 		}
 	}
 }
